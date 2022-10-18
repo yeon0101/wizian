@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ca.dormitory.staff.login.mapper.StaffLoginSQLMapper">
+
+	<select id="selectAllFromCBH_STAFFByIDAndPW" resultType="com.ca.dormitory.vo.StaffVo">
+		select * from CBH_STAFF where staff_id = #{staff_id} and staff_pw = #{staff_pw} 
+	</select>
+
+</mapper>

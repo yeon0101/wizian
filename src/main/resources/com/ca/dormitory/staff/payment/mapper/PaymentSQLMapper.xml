@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ca.dormitory.staff.payment.mapper.PaymentSQLMapper">
+
+	<select id="selectEntPaymentList" resultType="map">
+		SELECT defd.fee_dtl_no, da.APPL_NO, dei.ENT_NAME, da.STUD_ID, cs.STUD_NAME, defs.bldg_code, da.ROOM_CODE, defs.ENT_FEE_AMT, defd.rcv_dt
+		FROM DMT_ENT_FEE_STD defs ,
+		  	 DMT_ENT_FEE_DTL defd, 
+		     DMT_APPL da, 
+		     CBH_STUD cs,
+			 DMT_RECR_INFO dri,
+		  	 DMT_ENT_INFO dei
+		  WHERE defd.ENT_FEE_STD_NO  = defs.ENT_FEE_STD_NO 
+		  AND defd.appl_no = da.APPL_NO 
+		  AND da.STUD_ID = cs.STUD_ID 
+		  AND da.RECR_NO = dri.RECR_NO
+		  AND dri.ENT_NO = dei.ENT_NO
+			<if test="ent_no != 0">
+			AND dei.ent_no = #{ent_no}
+			</if>
+			<if test='!paymentStatus.equals("전체")'>
+		 		<choose>
+		 		 <when test="paymentStatus.equals('미납')">
+		 		 AND defd.rcv_dt IS NULL
+		 		 </when>
+		 		 <otherwise>
+		 		 AND defd.rcv_dt IS NOT NULL
+		 		 </otherwise>
+		 		</choose>
+			</if>
+			<if test="stud_grade != 0">
+			AND cs.STUD_GRADE = #{stud_grade}
+			</if>
+			<if test='!bldg_code.equals("전체")'>
+			AND defs.bldg_code = #{bldg_code}
+			</if>
+		  ORDER BY DECODE(defd.rcv_dt, null, 1), defd.fee_dtl_no
+	</select>
+
+
+
+
+	<select id="selectEntInfoNameList" resultType="map">
+		SELECT dei.ENT_NO , dei.ENT_NAME 
+		FROM DMT_ENT_INFO dei 
+		order by dei.ent_no desc
+	</select>
+</mapper>

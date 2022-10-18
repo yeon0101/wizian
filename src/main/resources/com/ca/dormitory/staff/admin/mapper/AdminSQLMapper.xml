@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ca.dormitory.staff.admin.mapper.AdminSQLMapper">
+
+	<select id="createAdminPk" resultType="int">
+		SELECT DMT_ADMIN_seq.nextval FROM Dual
+	</select>
+	
+	<select id="selectByAdminNo" resultType="com.ca.dormitory.vo.AdminVo">
+		SELECT * FROM DMT_ADMIN WHERE admin_no = #{no}
+	</select>
+
+	<select id="selectAdminList" resultType="Map">
+		SELECT * 
+		FROM CBH_STAFF cs , DMT_ADMIN da ,CBH_PSTN_DIV cpd
+		WHERE cs.STAFF_ID = da.STAFF_ID
+		and cs.PSTN_DIV_NO = cpd.pstn_div_no
+	</select>
+
+	<select id="selectCountByStaffId" resultType="int">
+		SELECT COUNT(*) FROM DMT_ADMIN WHERE staff_id = #{staffId}
+	</select>
+	
+	<insert id="insertDmtAdmin">
+		INSERT INTO DMT_ADMIN VALUES(
+			
+			dmt_admin_seq.nextval,
+			#{staff_id},
+			#{bldg_cd}
+			
+			
+		)	
+	</insert>
+	
+	<delete id="deleteByAdminNo">
+		DELETE FROM DMT_ADMIN WHERE admin_no = #{No}
+	</delete>
+	
+	
+	
+	
+</mapper>

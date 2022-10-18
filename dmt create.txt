@@ -1,0 +1,316 @@
+--학생
+CREATE TABLE CBH_STUD(
+	Stud_id VARCHAR2(100),
+	Stud_pw VARCHAR2(100),
+	Stud_name VARCHAR2(30),
+	Stud_phone VARCHAR2(60),
+	Stud_Email VARCHAR2(200),
+	Stud_gender VARCHAR2(20),
+	Stud_birth DATE,
+	Stud_grade VARCHAR2(20),
+	Stud_dept VARCHAR2(30),
+	Stud_photo_link VARCHAR2(200),
+	Stud_vlntr_time NUMBER,
+	Stud_reg_dt DATE,
+	Stud_state VARCHAR2(10)
+);
+
+--관리자
+CREATE SEQUENCE DMT_ADMIN_seq;
+CREATE TABLE DMT_ADMIN (
+   admin_no   number,
+   staff_id   varchar2(100),
+   bldg_code   varchar2(3)
+);
+
+
+--직원
+CREATE TABLE CBH_STAFF (
+   staff_id   number   not null,
+   pstn_div_no   number   not null,
+   staff_name   varchar2(50)   not null,
+   staff_pw   varchar2(50)   not null,
+   staff_join_date   date   not null,
+   staff_phone varchar2(200)   not NULL,
+   staff_email varchar2(200) NOT NULL,
+   staff_state   varchar2(20)   not NULL
+);
+
+
+--직급 
+CREATE SEQUENCE CBH_PSTN_DIV_seq;
+CREATE TABLE CBH_PSTN_DIV (
+   PSTN_DIV_NO   NUMBER   NOT NULL,
+   PSTN_DIV_NAME   VARCHAR2(50)   NOT NULL,
+   PSTN_DIV_ENG   VARCHAR2(50)   NULL,
+   PSTN_DIV_ABRVT   VARCHAR2(50)   NULL,
+   PSTN_DIV_STATE   VARCHAR2(1)   NOT NULL
+);
+
+
+
+--호관
+CREATE TABLE DMT_BLDG (
+	BLDG_Code	VARCHAR2(20)	NOT NULL,
+	BLDG_Name	VARCHAR2(50)	NOT NULL,
+	BLDG_FLOOR_CNT	NUMBER	NOT NULL,
+	bldg_gender_DIV	VARCHAR2(10)	NOT NULL,
+	BLDG_PLOTTAGE	VARCHAR2(10)	NOT NULL,
+	BLDG_CONST_Date	DATE	NOT NULL
+);
+
+--호관층
+CREATE TABLE DMT_FLOOR (
+	FLOOR_CODE	VARCHAR2(10)	NOT NULL,
+	BLDG_CODE	VARCHAR2(10)	NOT NULL,
+	FLOOR_NAME	VARCHAR2(50)	NOT NULL,
+	FLOOR_DIV	VARCHAR2(10)	NOT NULL,
+	FLOOR_GRADE_DIV	VARCHAR2(10)	NOT NULL
+);
+
+--호실
+CREATE TABLE DMT_ROOM (
+	ROOM_CODE	VARCHAR2(20)	NOT NULL,
+	FLOOR_CODE	VARCHAR2(20)	NOT NULL,
+	ROOM_NAME	VARCHAR2(100)	NOT NULL,
+	ROOM_BED_CNT	NUMBER	NOT NULL,
+	ROOM_DIV	VARCHAR2(10)	NOT NULL,
+	ROOM_USE_YN	VARCHAR2(10)	NOT NULL
+);
+
+
+
+--입사단위정보
+CREATE SEQUENCE DMT_ENT_INFO_seq;
+CREATE TABLE DMT_ENT_INFO (
+	ENT_NO	NUMBER	NOT NULL,
+	ENT_NAME	VARCHAR2(50)	NOT NULL,
+	ENT_YEAR	VARCHAR2(4)	NOT NULL,
+	ENT_TERM	VARCHAR2(2)	NOT NULL,
+	ENT_TERM_DIV	VARCHAR2(10)	NOT NULL,
+	OPEN_DATE	DATE	NOT NULL,
+	CLOSE_DATE	DATE	NOT NULL,
+	ENT_REG_DATE	DATE	NOT NULL,
+	ENT_AGREE_MSG	VARCHAR2(4000)	NOT NULL,
+	ENT_OATH_MSG	VARCHAR2(4000)	NOT NULL
+);
+
+
+--모집단위정보
+CREATE SEQUENCE DMT_RECR_INFO_seq;
+CREATE TABLE DMT_RECR_INFO (
+	RECR_NO	NUMBER	NOT NULL,
+	ENT_NO	NUMBER	NOT NULL,
+	RECR_NAME	VARCHAR2(100)	NOT NULL,
+	RECR_MSG	VARCHAR2(500)	NOT NULL,
+	RECR_DIV	VARCHAR2(2)	NOT NULL,
+	RECR_START_DATE	DATE	NOT NULL,
+	RECR_END_DATE	DATE	NOT NULL,
+	QRY_START_DATE	DATE	NOT NULL,
+	QRY_END_DATE	DATE	NOT NULL,
+	RCV_START_DATE	DATE	NOT NULL,
+	RCV_END_DATE	DATE	NOT NULL
+);
+
+
+
+--생활관비 테이블 (10/08 수정)
+CREATE SEQUENCE dmt_ent_fee_std_seq;
+CREATE TABLE DMT_ENT_FEE_STD (
+	ENT_FEE_STD_NO	NUMBER	NOT NULL,
+	ENT_TERM_DIV VARCHAR2(50)	NOT NULL,
+	BLDG_CODE	VARCHAR2(20)	NOT NULL,
+	ENT_FEE_AMT	NUMBER	NOT NULL
+);
+
+
+---생활관비 납부내역 테이블-----
+CREATE SEQUENCE dmt_ent_fee_dtl_seq;
+CREATE TABLE DMT_ENT_FEE_DTL (
+	FEE_DTL_NO	NUMBER	NOT NULL,
+	APPL_NO	NUMBER	NOT NULL,
+	ENT_FEE_STD_NO	NUMBER	NOT NULL,
+	VR_ACCOUNT	VARCHAR2(100)	NULL,
+	BANK_INFO	VARCHAR2(50) null	,
+	RCV_AMT	NUMBER	NULL,
+	RCV_DT	DATE	NULL,
+	RTN_AMT	NUMBER	NULL
+);
+
+
+
+--선발정원 테이블
+CREATE SEQUENCE dmt_ent_allo_seq;
+CREATE TABLE DMT_ENT_ALLO (
+	ENT_ALLO_NO	NUMBER	NOT NULL,
+	ENT_NO	NUMBER	NOT NULL,
+	GRADE_DIV	NUMBER	NOT NULL,
+	GENDER_DIV	VARCHAR2(20)	NOT NULL,
+	ALLO_CNT	NUMBER	NOT NULL,
+	SLCT_CNT	NUMBER	NULL
+);
+
+
+--입사신청서
+CREATE SEQUENCE dmt_appl_seq;
+CREATE TABLE DMT_APPL (
+	appl_no	number,
+	recr_no	number,
+	stud_id	varchar2(20),
+	room_code VARCHAR2(20),
+	appl_choice VARCHAR2(20),
+	appl_date	date,
+	appl_yn	varchar2(2),
+	slct_yn	varchar2(2),
+	stud_zipcode varchar2(20),
+	stud_addr1	varchar2(100),
+	stud_addr2	varchar2(100),
+	grdn_name	varchar2(10),
+	grdn_phone	varchar2(20),
+	grdn_relation varchar2(20),
+	grdn_zipcode varchar2(20),
+	grdn_addr1	varchar2(100),
+	grdn_addr2	varchar2(100)
+);
+
+
+--관생정보
+CREATE SEQUENCE dmt_ent_stud_seq;
+CREATE TABLE DMT_ENT_STUD (
+	ent_stud_no	number,
+	room_code	varchar2(20),
+	ent_no number,
+	appl_no	number
+);
+
+
+--외부활동신청기준
+CREATE TABLE DMT_ACT_STD (
+	act_cd	varchar2(2),
+	admin_no NUMBER,
+	act_nm	varchar2(50)
+);
+
+--외박내역
+CREATE SEQUENCE DMT_ACL_DTL_seq;
+CREATE TABLE DMT_ACT_DTL (
+	act_no	number,
+	act_cd	varchar2(2),
+	ent_stud_no	number,
+	ent_no NUMBER,
+	act_req_dt	date,
+	act_start_dt	date,
+	act_ent_dt	date,
+	act_day_cnt	number,
+	act_rsn	varchar2(500),
+	act_cancl_dt	date,
+	act_conf_yn	varchar2(1)
+);
+
+
+
+--벌점기준
+CREATE TABLE DMT_PEN_STD (
+	pen_cd	varchar2(20),
+	pen_nm	varchar2(200),
+	pen_pt	NUMBER,
+	dmt_resign VARCHAR2(50),
+	pet_crt varchar2(50)
+);
+
+
+--벌점부과내역
+CREATE SEQUENCE dmt_pen_dtl_seq;
+CREATE TABLE DMT_PEN_DTL (
+	pen_no	number,
+	pen_cd	varchar2(20),
+	ent_stud_no	number,
+	admin_no number,
+	pen_dt	date,
+	pen_rsm	varchar2(400),
+	pen_conf_yn varchar2(1) --Y/N/S
+);
+
+
+
+--공지사항 --10.11 수정
+CREATE SEQUENCE DMT_NOTICE_seq;
+CREATE TABLE DMT_NOTICE(
+	NOTICE_NO NUMBER,
+	ADMIN_NO NUMBER,
+	NOTICE_TITLE VARCHAR2(100),
+	NOTICE_CONTENT VARCHAR2(1200),
+	NOTICE_READCOUNT NUMBER,
+	NOTICE_REG_DT DATE,
+	NOTICE_PIN NUMBER
+);
+
+
+
+--게시판
+CREATE SEQUENCE DMT_BOARD_seq;
+CREATE TABLE DMT_BOARD (
+   board_no number,
+   ent_stud_no number,
+   room_code VARCHAR2(20),
+   board_title varchar2(100),
+   board_content varchar2(1000),
+   board_reg_dt date
+);
+
+
+--댓글
+CREATE SEQUENCE DMT_COMMENT_seq;
+CREATE TABLE DMT_COMMENT(
+   cmmt_no NUMBER,
+   board_no NUMBER,
+   ent_stud_no NUMBER,
+   cmmt_content VARCHAR2(500),
+   cmmt_reg_dt DATE   
+);
+
+--학생점수
+CREATE SEQUENCE DMT_STUD_SCORE_seq;
+CREATE TABLE DMT_STUD_SCORE (
+	STUD_SCORE_NO	NUMBER		NOT NULL,
+	STUD_ID	VARCHAR2(100)		NOT NULL,
+	STUD_LAST_SCORE	number		NOT NULL
+);
+
+
+
+--pk fk constraint------------------------------------------------------------------------------------------------
+
+ALTER TABLE DMT_BLDG ADD CONSTRAINT PK_DMT_BLDG PRIMARY KEY (BLDG_CODE);
+
+
+ALTER TABLE DMT_FLOOR ADD CONSTRAINT PK_DMT_FLOOR PRIMARY KEY (	FLOOR_CODE);
+
+
+ALTER TABLE DMT_ROOM ADD CONSTRAINT PK_DMT_ROOM PRIMARY KEY (ROOM_CODE);
+
+ALTER TABLE DMT_FLOOR ADD CONSTRAINT FK_DMT_BLDG_TO_DMT_FLOOR_1 FOREIGN KEY (	BLDG_CODE)
+REFERENCES DMT_BLDG (	BLDG_CODE)ON DELETE CASCADE ;
+
+
+ALTER TABLE DMT_ROOM ADD CONSTRAINT FK_DMT_FLOOR_TO_DMT_ROOM_1 FOREIGN KEY (FLOOR_CODE)
+REFERENCES DMT_FLOOR (	FLOOR_CODE) ON DELETE CASCADE;
+
+
+ALTER TABLE DMT_RECR_INFO ADD CONSTRAINT PK_DMT_RECR_INFO PRIMARY KEY (	RECR_NO);
+
+
+ALTER TABLE DMT_ENT_INFO ADD CONSTRAINT PK_DMT_ENT_INFO PRIMARY KEY (	ENT_NO);
+
+
+ALTER TABLE DMT_RECR_INFO ADD CONSTRAINT FK_ENT_INFO_TO_RECR_INFO_1 FOREIGN KEY (	ENT_NO)
+REFERENCES DMT_ENT_INFO (	ENT_NO) ON DELETE CASCADE;
+
+
+ALTER TABLE DMT_ENT_ALLO ADD CONSTRAINT PK_DMT_ENT_ALLO PRIMARY KEY (	ENT_ALLO_NO);
+
+ALTER TABLE DMT_ENT_ALLO ADD CONSTRAINT FK_ENT_INFO_TO_ENT_ALLO_1 FOREIGN KEY (	ENT_NO)
+REFERENCES DMT_ENT_INFO (	ENT_NO) ON DELETE CASCADE ;
+------------------------------------------------------------------------------------------------
+
+

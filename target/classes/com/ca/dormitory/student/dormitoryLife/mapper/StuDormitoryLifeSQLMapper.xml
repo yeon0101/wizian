@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ca.dormitory.student.dormitoryLife.mapper.StuDormitoryLifeSQLMapper">
+
+	<!-- 관생정보+입사신청+학생정보 -->
+	<select id="selectStudentInfoByID" resultType="Map">
+		SELECT * FROM (
+			SELECT t1.*,ROWNUM AS rnum FROM (
+				SELECT cs.STUD_ID ,cs.STUD_NAME, des.ENT_STUD_NO , des.ROOM_CODE , des.ENT_NO , da.APPL_NO, da.RECR_NO,
+				da.APPL_DATE , da.STUD_ZIPCODE , da.STUD_ADDR1 , da.STUD_ADDR2 , da.GRDN_NAME ,da.GRDN_PHONE
+				FROM DMT_APPL da, DMT_ENT_STUD des , CBH_STUD cs 
+				WHERE da.APPL_NO =des.APPL_NO AND cs.STUD_ID =da.STUD_ID 
+				AND da.STUD_ID = #{studID} ORDER BY da.APPL_NO DESC
+			)t1
+		)t2 WHERE t2.rnum = '1'
+	</select>
+	
+	<select id="selectENTStudentInfoByID" resultType="com.ca.dormitory.vo.EntStudVo">
+		SELECT * FROM (
+			SELECT t1.*, ROWNUM AS rnum FROM (
+				SELECT des.* 
+				FROM DMT_APPL da, DMT_ENT_STUD des , CBH_STUD cs 
+				WHERE da.APPL_NO =des.APPL_NO AND cs.STUD_ID =da.STUD_ID 
+				AND da.STUD_ID = #{studID} ORDER BY da.APPL_NO DESC
+			)t1 
+		)t2 WHERE rnum='1'
+	</select>
+
+	<!-- 관생정보+입사신청서+학생정보 -->
+	<select id="selectENTInfoByID" resultType="Map">
+		SELECT * FROM DMT_ENT_STUD des, DMT_ENT_INFO dei, DMT_APPL da WHERE des.ENT_NO = dei.ENT_NO AND des.APPL_NO = da.APPL_NO
+		AND da.STUD_ID = #{studID} ORDER BY dei.ENT_NO DESC
+	</select>
+	
+	<!-- 호관정보+호관층정보+호실정보 -->
+	<select id="selectDMTInfoByRoom" resultType="map">
+		SELECT * FROM DMT_BLDG db, DMT_FLOOR df, DMT_ROOM dr WHERE db.BLDG_CODE =df.BLDG_CODE AND df.FLOOR_CODE = dr.FLOOR_CODE
+		AND dr.ROOM_CODE = #{roomCode}
+	</select>
+	
+	<!-- 외박신청PK -->
+	<select id="createActDtlPK" resultType="int">
+		select DMT_ACL_DTL_seq.nextval from dual
+	</select>
+	
+	<insert id="insertActDtl">
+		INSERT INTO DMT_ACT_DTL VALUES(
+			#{act_no},
+			#{act_cd},
+			#{ent_stud_no},
+			#{ent_no},
+			SYSDATE,
+			NULL,
+			NULL,
+			NULL,
+			#{act_rsn},
+			NULL,
+			'N'
+		)	
+	</insert>
+	
+	<update id="updateStartEndDate">
+		UPDATE DMT_ACT_DTL SET act_start_dt = #{act_start_dt}, act_ent_dt = #{act_ent_dt}, act_day_cnt = #{act_day_cnt}
+		WHERE act_start_dt IS NULL 
+		and act_no = #{act_no}
+	</update>
+	
+	<select id="myActDtlList" resultType="com.ca.dormitory.vo.ActDtlVo">
+		SELECT dad.*
+		FROM DMT_APPL da, DMT_ENT_STUD des , CBH_STUD cs, DMT_ACT_DTL dad 
+		WHERE da.APPL_NO =des.APPL_NO AND cs.STUD_ID =da.STUD_ID AND des.ENT_STUD_NO =dad.ENT_STUD_NO 
+		AND da.STUD_ID = #{stud_id} AND des.ENT_NO = #{ent_no} ORDER BY dad.ACT_NO DESC
+	</select>
+	
+	<update id="cancelMyActByNo">
+		UPDATE DMT_ACT_DTL SET ACT_CANCL_DT = SYSDATE 
+		WHERE act_no= #{no} AND ACT_CANCL_DT IS null AND ACT_CONF_YN = 'N'	
+	</update>
+	
+	<!-- 추가 합쳐야함 -->
+	<select id="selectMyActByNo" resultType="com.ca.dormitory.vo.ActDtlVo">
+		SELECT * FROM DMT_ACT_DTL WHERE act_no = #{no}
+	</select>
+	
+	 <select id="ApplList" resultType="HashMap">
+      SELECT * 
+      FROM CBH_STUD cs ,DMT_APPL da, DMT_RECR_INFO dri  , DMT_ENT_INFO dei
+      WHERE cs.STUD_ID = da.STUD_ID 
+      AND da.RECR_NO = dri.RECR_NO 
+      AND dri.ENT_NO = dei.ENT_NO
+      AND CS.STUD_ID =#{stud_no}
+      ORDER BY da.appl_no desc
+   </select>
+	
+	
+	<select id="selectMyEntFeeDetail" resultType="map">
+		SELECT *
+		FROM DMT_ENT_FEE_DTL defe, DMT_ENT_FEE_STD defs , DMT_APPL da , DMT_RECR_INFO dri , DMT_ENT_INFO dei 
+		WHERE defe.ENT_FEE_STD_NO = defs.ENT_FEE_STD_NO 
+		AND defe.APPL_NO = da.APPL_NO 
+		AND da.RECR_NO = dri.RECR_NO 
+		AND dri.ENT_NO = dei.ENT_NO 
+		and da.APPL_NO = #{applNo}
+	</select>
+	
+	
+	<update id="updateMyEntFeeDetail">
+		UPDATE DMT_ENT_FEE_DTL 
+		SET rcv_amt = #{rcv_amt}, rcv_dt = sysdate
+		WHERE appl_no = #{appl_no}
+	</update>
+	
+	<update id="updateApplSlctYN">
+		UPDATE DMT_APPL 
+		SET SLCT_YN = 'Y'
+		WHERE APPL_NO = #{appl_no}
+	</update>
+	
+	
+	<insert id="insertEntStud">
+		INSERT INTO DMT_ENT_STUD (ent_stud_no, ROOM_CODE, ENT_NO, APPL_NO)
+		SELECT dmt_ent_stud_seq.nextval, da.ROOM_CODE , dei.ENT_NO , da.APPL_NO
+		FROM DMT_APPL da, DMT_RECR_INFO dri, DMT_ENT_INFO dei 
+		WHERE da.RECR_NO = dri.RECR_NO 
+		AND dri.ENT_NO = dei.ENT_NO 
+		AND da.APPL_NO = #{appl_no}
+	</insert>
+	
+	<!-- 입사자종합: 윤설~~~~~ -->
+		<!-- 입사자 종합: 벌점내역 -->
+	<select id="selectMyPenList" resultType="com.ca.dormitory.vo.PenDtlVo">
+		SELECT dpd.* 
+		FROM DMT_PEN_DTL dpd, DMT_ENT_STUD des , DMT_APPL da, CBH_STUD cs 
+		WHERE dpd.ent_stud_no = des.ent_stud_no 
+		AND des.appl_no = da.appl_no AND da.stud_id = cs.stud_id
+		AND cs.STUD_ID = #{stud_id}
+		<if test='ent_stud_no != null'>
+			AND des.ENT_STUD_NO = #{ent_stud_no}
+		</if>
+		<if test='startDate != null and endDate != null'>
+			<![CDATA[
+				AND TO_CHAR(PEN_DT, 'YYYY-MM-DD') >= #{startDate}
+				AND TO_CHAR(PEN_DT, 'YYYY-MM-DD') <= #{endDate}
+			]]>
+		</if>
+		<if test='startDate != null and endDate == null'>
+			AND TO_CHAR(PEN_DT, 'YYYY-MM-DD')= #{startDate}
+		</if>
+		ORDER BY pen_no DESC
+	</select>	
+
+	<!-- 입사자종합: 외박내역 -->
+	<select id="selectMyActList" resultType="com.ca.dormitory.vo.ActDtlVo">
+		SELECT dad.* 
+		FROM DMT_ACT_DTL dad, DMT_ENT_STUD des , DMT_APPL da, CBH_STUD cs 
+		WHERE dad.ent_stud_no = des.ent_stud_no 
+		AND des.appl_no = da.appl_no AND da.stud_id = cs.stud_id
+		AND dad.ACT_CONF_YN = 'Y'
+		AND cs.STUD_ID = #{stud_id}
+		<if test='ent_stud_no != null'>
+			AND des.ENT_STUD_NO = #{ent_stud_no}
+		</if>
+		<if test='actStrDate != null and actEntDate != null'>
+			<![CDATA[
+				AND TO_CHAR(act_req_dt, 'YYYY-MM-DD') >= #{actStrDate}
+				AND TO_CHAR(act_req_dt, 'YYYY-MM-DD') <= #{actEntDate}
+			]]>
+		</if>
+		<if test='actStrDate != null and actEntDate == null'>
+			AND TO_CHAR(act_req_dt, 'YYYY-MM-DD')= #{actStrDate}
+		</if>
+		ORDER BY act_no DESC
+	</select>
+	
+	
+	
+</mapper>

@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ca.dormitory.staff.plan.mapper.PlanSQLMapper">
+
+
+
+<!-- 생활관 호실정보관리 -->
+	<insert id="insertBldg">
+		INSERT INTO DMT_BLDG VALUES (
+			#{bldg_code},
+			#{bldg_name},
+			#{bldg_floor_cnt},
+			#{bldg_gender_div},
+			#{bldg_plottage},
+			#{bldg_const_date}
+		)
+	</insert>
+	
+	<insert id="insertFloor">
+		INSERT INTO DMT_FLOOR VALUES (
+			#{floor_code},
+			#{bldg_code},
+			#{floor_name},
+			#{floor_div},
+			#{floor_grade_div}
+		)
+	</insert>
+	
+	<insert id="insertRoom">
+		INSERT INTO DMT_ROOM VALUES (
+			#{room_code},
+			#{floor_code},
+			#{room_name},
+			#{room_bed_cnt},
+			#{room_div},
+			#{room_use_yn}
+		)
+	</insert>
+	
+	<select id="selectBldg" resultType="map">
+		SELECT *
+		FROM DMT_BLDG db 
+		WHERE BLDG_Code = #{bldgCode}
+	</select>
+	
+	<select id="selectBldgList" resultType="map">
+		SELECT * FROM DMT_BLDG db 
+	</select>
+	
+	<select id="selectBuildingSummaryList" resultType="map">
+		SELECT db.BLDG_Code,
+			   DB.BLDG_NAME, 
+			   db.BLDG_GENDER_DIV ,
+			   count(dr.room_cODE) AS total_room_cnt,
+			   sum(CASE WHEN db.bldg_gender_DIV = '남자' AND dr.room_code IS NOT NULL AND dr.room_use_yn = 'Y' THEN 1 ELSE 0 end) AS a_room_cnt_m,
+			   sum(CASE WHEN db.bldg_gender_DIV = '여자' AND dr.room_code IS NOT NULL AND dr.room_use_yn = 'Y' THEN 1 ELSE 0 end) AS a_room_cnt_f,
+			   (sum(CASE WHEN db.bldg_gender_DIV = '여자' AND dr.room_code IS NOT NULL AND dr.room_use_yn = 'Y' THEN 1 ELSE 0 end) 
+				+ sum(CASE WHEN db.bldg_gender_DIV = '남자' AND dr.room_code IS NOT NULL AND dr.room_use_yn = 'Y' THEN 1 ELSE 0 end)) AS a_room_cnt,
+				dr.room_bed_cnt
+			FROM DMT_BLDG db 
+				LEFT JOIN DMT_FLOOR DF ON (DB.BLDG_CODE = DF.BLDG_CODE)
+				LEFT JOIN DMT_ROOM DR ON (DF.FLOOR_CODE = DR.FLOOR_CODE)
+		GROUP BY db.BLDG_Code, DB.BLDG_NAME, db.BLDG_GENDER_DIV , dr.room_bed_cnt
+		ORDER BY db.BLDG_CODE 
+	</select>
+	
+	<select id="selectFloorSummaryList" resultType="map">
+		SELECT df.FLOOR_CODE , 
+			   df.FLOOR_NAME , 
+			   df.FLOOR_DIV , 
+			   df.FLOOR_GRADE_DIV,
+			   dr.room_bed_cnt,
+			   count(dr.ROOM_CODE) AS floor_room_cnt,
+			   sum(CASE WHEN db.bldg_gender_DIV = '남자' AND dr.room_code IS NOT NULL AND dr.room_use_yn = 'Y' THEN 1 ELSE 0 end) AS a_room_cnt_m,
+			   sum(CASE WHEN db.bldg_gender_DIV = '여자' AND dr.room_code IS NOT NULL AND dr.room_use_yn = 'Y' THEN 1 ELSE 0 end) AS a_room_cnt_f,
+			   (sum(CASE WHEN db.bldg_gender_DIV = '여자' AND dr.room_code IS NOT NULL AND dr.room_use_yn = 'Y' THEN 1 ELSE 0 end) 
+				+ sum(CASE WHEN db.bldg_gender_DIV = '남자' AND dr.room_code IS NOT NULL AND dr.room_use_yn = 'Y' THEN 1 ELSE 0 end)) AS a_room_cnt
+		FROM DMT_FLOOR df
+			JOIN DMT_BLDG db ON (db.bldg_code = df.bldg_code)
+			LEFT JOIN DMT_ROOM dr ON (df.floor_code = dr.floor_code)
+		WHERE db.BLDG_CODE  = #{bldgCode}
+		GROUP BY df.FLOOR_CODE , df.FLOOR_NAME , df.FLOOR_DIV , df.FLOOR_GRADE_DIV, dr.room_bed_cnt
+		ORDER BY df.FLOOR_CODE 
+	</select>
+	
+	<select id="selectRoomList" resultType="map">
+		SELECT *
+		FROM DMT_FLOOR df
+			JOIN DMT_BLDG db ON (db.bldg_code = df.bldg_code)
+			JOIN DMT_ROOM dr ON (df.floor_code = dr.floor_code)
+		WHERE df.floor_code = #{floorCode}
+	</select>
+
+	<delete id="deleteBldg">
+		DELETE FROM DMT_BLDG db 
+		WHERE db.BLDG_CODE = #{bldg_code}
+	</delete>
+	
+	<delete id="deleteFloor">
+		DELETE FROM DMT_FLOOR 
+		WHERE FLOOR_CODE = #{floor_code}
+	</delete>
+	
+	<delete id="deleteRoom">
+		DELETE FROM DMT_ROOM 
+		WHERE ROOM_CODE = #{room_code}
+	</delete>
+
+
+
+
+
+	<!-- 입사계획관리 -->
+
+	<insert id="insertEntInfo">
+		INSERT INTO DMT_ENT_INFO values(
+			dmt_ent_info_seq.nextval,
+			#{ent_name},
+			#{ent_year},
+			#{ent_term},
+			#{ent_term_div},
+			#{open_date},
+			#{close_date},
+			SYSDATE,
+			#{ent_agree_msg},
+			#{ent_oath_msg}
+		)
+	</insert>
+	
+	
+	<insert id="insertRecrInfo">
+		INSERT INTO DMT_RECR_INFO values(
+			dmt_recr_info_seq.nextval,
+			#{ent_no},
+			#{recr_name},
+			#{recr_msg},
+			#{recr_div},
+			#{recr_start_date},
+			#{recr_end_date},
+			#{qry_start_date},
+			#{qry_end_date},
+			#{rcv_start_date},
+			#{rcv_end_date}
+	)
+	</insert>
+	
+	<select id="selectEntInfo" resultType="map">
+		SELECT * 
+		FROM DMT_ENT_INFO
+		WHERE ENT_NO = #{ent_no}
+	</select>
+	
+	<select id="selectRecrInfo" resultType="map">
+		SELECT *
+		FROM DMT_ENT_INFO dei, DMT_RECR_INFO dri
+		WHERE dei.ent_no = dri.ent_no
+		AND dri.recr_no = #{recr_no}
+		order by dri.recr_div
+	</select>
+	
+	
+	<!-- 필터 추가 예정 -->
+	<select id="selectEntInfoList" resultType="map">
+		SELECT * 
+		FROM DMT_ENT_INFO
+		WHERE 1 = 1
+		<if test="ent_year != 0">
+		AND ent_year = #{ent_year}
+		</if>
+		<if test="ent_term != 0">
+		AND ent_term = #{ent_term}
+		</if>
+		<if test='!ent_term_div.equals("0")'>
+		AND ent_term_div = #{ent_term_div}
+		</if>
+		order by close_date desc
+	</select>
+	
+	<select id="selectEntYearList" resultType="map">
+		SELECT distinct ent_year
+		FROM DMT_ENT_INFO 
+	</select>
+	
+	<select id="selectRecrInfoList" resultType="map">
+		SELECT *
+		FROM DMT_ENT_INFO dei, DMT_RECR_INFO dri
+		WHERE dei.ent_no = dri.ent_no
+		AND dri.ent_no = #{ent_no}
+		ORDER BY dri.recr_div
+	</select>
+	
+	
+	<select id="selectFloorRoomCountList" resultType="map">
+		SELECT df.FLOOR_CODE , df.FLOOR_NAME, count(dr.ROOM_CODE) AS ROOM_CNT, sum(dr.ROOM_BED_CNT) AS BED_CNT 
+		FROM DMT_BLDG db , DMT_FLOOR df , DMT_ROOM dr 
+		WHERE db.BLDG_CODE = df.BLDG_CODE 
+		AND df.FLOOR_CODE = dr.FLOOR_CODE
+		<if test='!bldg_code.equals("all")'>
+			AND db.BLDG_CODE = #{bldg_code}
+		</if>
+		GROUP BY df.FLOOR_CODE , df.FLOOR_NAME 
+		ORDER BY df.FLOOR_CODE
+
+	</select>
+	
+	<delete id="deleteEntInfo">
+		DELETE 
+		FROM DMT_ENT_INFO dei
+		WHERE dei.ent_no = #{ent_no}
+	</delete>
+	
+	<delete id="deleteRecrInfo">
+		DELETE 
+		FROM DMT_RECR_INFO dri
+		WHERE dri.recr_no = #{recr_no}
+	</delete>
+	
+	
+	<update id="updateAvailableRoom">
+		UPDATE DMT_ROOM 
+		SET ROOM_USE_YN = #{room_use_yn}
+		WHERE ROOM_CODE = #{room_code}
+	</update>
+	
+	
+	
+	<select id="selectEntAlloCntSummary" resultType="map">
+		SELECT df.FLOOR_GRADE_DIV,
+			   sum(CASE WHEN db.BLDG_GENDER_DIV ='남자' AND dr.room_use_yn = 'Y' THEN dr.ROOM_BED_CNT END) AS allo_cnt_m,
+			   sum(CASE WHEN db.BLDG_GENDER_DIV ='여자' AND dr.room_use_yn = 'Y'THEN dr.ROOM_BED_CNT end) AS allo_cnt_f,
+			   sum(CASE WHEN db.BLDG_GENDER_DIV ='남자' AND da.SLCT_YN = 'Y' THEN 1 ELSE 0 END) AS slct_cnt_m,
+			   sum(CASE WHEN db.BLDG_GENDER_DIV ='여자' AND da.SLCT_YN = 'Y' THEN 1 ELSE 0 end) AS slct_cnt_f
+		FROM DMT_BLDG db , DMT_FLOOR df ,DMT_ROOM dr 
+		LEFT JOIN DMT_APPL da ON (dr.ROOM_CODE = da.ROOM_CODE)
+		WHERE db.BLDG_CODE = df.BLDG_CODE 
+		AND df.FLOOR_CODE = dr.FLOOR_CODE 
+		GROUP BY df.FLOOR_GRADE_DIV 
+		ORDER BY df.FLOOR_GRADE_DIV 
+	</select>
+</mapper>

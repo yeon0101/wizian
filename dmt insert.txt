@@ -1,0 +1,594 @@
+
+--학생정보 인서트
+INSERT INTO CBH_STUD values(
+	'20110000',
+	'1',
+	'문진원',
+	'010-5501-9247',
+	'wlsdnjs8801@naver.com',
+	'남자',
+	'1992-04-07',
+	'4',
+	'경영학과',
+	'101010',
+	5,
+	'2011-04-04',
+	'재학중'
+	);
+
+
+
+--입사단위정보 인서트
+INSERT INTO DMT_ENT_INFO VALUES(
+	 DMT_ent_INFO_seq.nextval,
+	'2022학년도1학기',
+	'2022',
+	'1',
+	'학기',
+	'2022-03-01',
+	'2022-08-01',
+	'2022-02-01',
+	'Ⅰ. 개인정보의 수집 및 이용 동의서
+	 - 이용자가 제공한 모든 정보는 다음의 목적을 위해 활용하며, 하기 목적 이외의 용도로는 사용되지 않습니다.
+	① 개인정보 수집 항목 및 수집·이용 목적
+	 가) 수집 항목 (필수항목)
+	- 성명(국문), 주민등록번호, 주소, 전화번호(자택, 휴대전화), 사진, 이메일, 나이, 재학정보, 병역사항,
+	외국어 점수, 가족관계, 재산정도, 수상내역, 사회활동, 타 장학금 수혜현황, 요식업 종사 현황 등 지원
+	신청서에 기재된 정보 또는 신청자가 제공한 정보
+	 나) 수집 및 이용 목적
+	- 하이트진로 장학생 선발 전형 진행
+	- 하이트진로 장학생과의 연락 및 자격확인
+	- 하이트진로 장학생 자원관리
+	 ② 개인정보 보유 및 이용기간
+	 - 수집·이용 동의일로부터 개인정보의 수집·이용목적을 달성할 때까지
+	 ③ 동의거부관리
+	 - 귀하께서는 본 안내에 따른 개인정보 수집, 이용에 대하여 동의를 거부하실 권리가 있습니다. 다만,
+	귀하가 개인정보의 수집/이용에 동의를 거부하시는 경우에 장학생 선발 과정에 있어 불이익이 발생할 수
+	있음을 알려드립니다.',
+	
+	'본인은 국제대학교 기숙사에 입사함에 있어 학사ㆍ기숙사관련 규정과 제반수칙을 준수하며, 학생생활관 규정(신규 개정)과 관련 공동체생활 집단의 한 구성원으로서 자신의 행동에 책임을 질 줄 알며, 학문을 넓히고 인격수양에 전념할 것을 다짐함은 물론, 위약금 관련하여 충분한 안내를 사전 받았으며, 또한 다음의 준수사항을 철저히 지킬 것을 서약합니다.
+	- 다  음 -
+	1.  학사⦁기숙사운영 관련 제반 규정을 위반하여 발생하는 모든 사고는 본인의 책임이며 어떤 이유로든 그 책임을 대학 측에 전가(轉嫁)하지 않겠습니다.
+	2.  제반지침 및 명령 등을 준수함은 물론 관계직원의 지시에 순종하겠습니다.  
+	3.  대학에서 책정한 납부금 내역에 동의하고, 중도 입사/퇴사의 경우 납부금 환불금액은 대학이 정한 기준에 따르겠습니다.
+	4.  기숙사내의 비품⦁시설물을 파손하였을 때는 즉시 변상 또는 원상회복하겠습니다. 
+	5.  기숙사 입사기간 동안 공동체생활을 함에 있어 성실한 자세로서 협조하며, 이를 불이행 할 경우 발생되는 모든 책임은 본인이 지겠습니다.
+	6.  입사생 이외의 자에게 동반 입실 및 숙식을 제공하지 않겠습니다.
+	7.  기숙사내 규칙을 위반하였을 때에는 이에 상응하는 처벌을 감수하겠습니다.
+	8.  외출ㆍ외박기간 동안 기숙사 밖에서 일어나는 모든 일은 본인이 책임지겠습니다.
+	9.  전염성질환 등으로 건강진단서 상 단체생활에 부적합한 경우, 대학의 입사취소에 동의합니다. 
+	10. 대학에서 지정하는 만기퇴사일 이후 방학 중에는 퇴사를 하겠습니다. '
+	);
+	
+--모집단위정보 인서트
+INSERT INTO DMT_RECR_INFO values(
+   DMT_RECR_INFO_seq.nextval,
+   1,
+   '2022학년도 1학기 3학년 신청',
+   '2022학년도 1학기 3학년 입사신청. 09/15 ~ 09/22 일주일간 신청가능합니다',
+   '3',
+   '2022-8-15',
+   '2022-9-14',
+   '2022-10-01',
+   '2022-10-10',
+   '2022-10-11',
+   '2022-10-20'
+);
+
+
+--입사신청서 인서트
+INSERT INTO DMT_APPL values(
+DMT_APPL_seq.nextval,
+1,
+'id',
+'2호',
+'a',
+'b',
+SYSDATE,
+'N',
+'N',
+'2',
+'2',
+'3',
+'3',
+'1',
+'1',
+'1',
+'1',
+'1'
+);
+
+
+
+
+--외박기준
+INSERT INTO DMT_ACT_STD values('N1','1','주중외박');
+INSERT INTO DMT_ACT_STD values('N2','1','주말(공휴일)외박');
+INSERT INTO DMT_ACT_STD values('N3','1','특별,추가외박');
+
+--벌점기준
+INSERT INTO DMT_PEN_STD values(
+	'P1',
+	'생활관내에서 절도,폭력,도박,이성혼숙,방화',
+	'30',
+	'즉시퇴사',
+	'생활관규정'
+);
+INSERT INTO DMT_PEN_STD values(
+	'P2',
+	'생활관 내 기물 및 시설물 손상, 파괴, 난동행위',
+	'30',
+	'즉시퇴사',
+	'생활관규정'
+);
+INSERT INTO DMT_PEN_STD values(
+	'P3',
+	'생활관 내(화장실 포함)음주 또는 흡엽(술병 소지 포함)',
+	'30',
+	'즉시퇴사',
+	'생활관규정'
+);
+INSERT INTO DMT_PEN_STD values(
+	'P4',
+	'생활관 내 전열기구 및 화기사용 또는 취사행위',
+	'30',
+	'즉시퇴사',
+	'생활관규정'
+);
+INSERT INTO DMT_PEN_STD values(
+	'P5',
+	'생활관 정문 외 발코니 및 창문출입, 현관폐문 후 기숙사 내외로 무단출입행위',
+	'30',
+	'즉시퇴사',
+	'생활관규정'
+);
+INSERT INTO DMT_PEN_STD values(
+	'P6',
+	'생활관장의 사전승인 없이 외부인 숙박허용',
+	'30',
+	'즉시퇴사',
+	'생활관규정'
+);
+INSERT INTO DMT_PEN_STD values(
+	'P7',
+	'음주 후 기숙사 내에서 소란행위',
+	'30',
+	'즉시퇴사',
+	'생활관규정'
+);
+INSERT INTO DMT_PEN_STD values(
+	'P8',
+	'벌점 합계 30점 이상으로 퇴사',
+	'30',
+	'즉시퇴사',
+	'생활관규정'
+);
+
+--
+INSERT INTO DMT_PEN_STD values(
+	'P21',
+	'외박규정, 음식물 반입 규정위반',
+	'5',
+	null,
+	'생활관규정'
+);
+INSERT INTO DMT_PEN_STD values(
+	'P22',
+	'지정된 호실의 임의 변경',
+	'3',
+	null,
+	'생활관규정'
+);
+INSERT INTO DMT_PEN_STD values(
+	'P23',
+	'자치부 임원의 자치활동 방해 행위',
+	'3',
+	null,
+	'생활관규정'
+);
+INSERT INTO DMT_PEN_STD values(
+	'P24',
+	'외박일지 허위 및 대리 작성 및 내용 미흡',
+	'2',
+	null,
+	'생활관규정'
+);
+INSERT INTO DMT_PEN_STD values(
+	'P25',
+	'생활관 주차장 내 불량 주차 및 타인의 주차행위 방해',
+	'2',
+	null,
+	'생활관규정'
+);
+INSERT INTO DMT_PEN_STD values(
+	'P26',
+	'생활관 내에서 가래침 뱉기, 휴기 등을 함부로 버리는 행위',
+	'2',
+	null,
+	'생활관규정'
+);
+INSERT INTO DMT_PEN_STD values(
+	'P27',
+	'기타 생활관 규정 및 지시사행 불이행',
+	'2',
+	null,
+	'생활관규정'
+);
+
+INSERT INTO CBH_STUD values(
+   '202211111',
+   '1111',
+   '학생1',
+   '010-1234-1234',
+   'asdf12@naver.com',
+   'F',
+   '2000.01.01',
+   '1',
+   '수산학과',
+   'asdf.jpg',
+   '10',
+   '2022.03.1',
+   'STATE'
+);
+
+--관생정보 인서트
+INSERT INTO DMT_ENT_STUD values (
+	1,
+	'A101',
+	2,
+	1
+);
+
+--어드민 인서트
+INSERT INTO DMT_ADMIN values(
+	1,
+	2,
+	'A'
+);
+
+--게시판 인서트
+INSERT INTO dmt_board VALUES(
+   dmt_board_seq.nextval,
+   1,
+   'A101',
+   '제목22',
+   '내용22',
+   SYSDATE
+);
+
+--댓글 인서트
+INSERT INTO DMT_COMMENT VALUES(
+   dmt_comment_seq.nextval,
+   1,
+   1,
+   '댓글입니다',
+   sysdate
+);
+
+--공지사항 인서트
+INSERT INTO DMT_NOTICE VALUES(
+DMT_NOTICE_seq.nextval,
+1,
+'입사 안내2222',
+'입사안내 입니다2222.',
+0,
+SYSDATE
+);
+
+
+-------------------------호관 인서트-------------------------
+INSERT INTO DMT_BLDG values('A','A관',4,'남자','123',sysdate);
+INSERT INTO DMT_BLDG values('B','B관',4,'남자','123',sysdate);
+INSERT INTO DMT_BLDG values('C','C관',4,'남자','123',sysdate);
+INSERT INTO DMT_BLDG values('D','D관',4,'여자','123',sysdate);
+INSERT INTO DMT_BLDG values('E','E관',4,'여자','123',sysdate);
+INSERT INTO DMT_BLDG values('F','F관',4,'여자','123',sysdate);
+
+
+-------------------------호관층 인서트-------------------------
+--남자
+INSERT INTO DMT_FLOOR values('A1','A','A관1층','지상1층','1');
+INSERT INTO DMT_FLOOR values('A2','A','A관2층','지상2층','2');
+INSERT INTO DMT_FLOOR values('A3','A','A관3층','지상3층','3');
+INSERT INTO DMT_FLOOR values('A4','A','A관4층','지상4층','4');
+INSERT INTO DMT_FLOOR values('B1','B','B관1층','지상1층','1');
+INSERT INTO DMT_FLOOR values('B2','B','B관2층','지상2층','2');
+INSERT INTO DMT_FLOOR values('B3','B','B관3층','지상3층','3');
+INSERT INTO DMT_FLOOR values('B4','B','B관4층','지상4층','4');
+INSERT INTO DMT_FLOOR values('C1','C','C관1층','지상1층','1');
+INSERT INTO DMT_FLOOR values('C2','C','C관2층','지상2층','2');
+INSERT INTO DMT_FLOOR values('C3','C','C관3층','지상3층','3');
+INSERT INTO DMT_FLOOR values('C4','C','C관4층','지상4층','4');
+--여자
+INSERT INTO DMT_FLOOR values('D1','D','D관1층','지상1층','1');
+INSERT INTO DMT_FLOOR values('D2','D','D관2층','지상2층','2');
+INSERT INTO DMT_FLOOR values('D3','D','D관3층','지상3층','3');
+INSERT INTO DMT_FLOOR values('D4','D','D관4층','지상4층','4');
+INSERT INTO DMT_FLOOR values('E1','E','E관1층','지상1층','1');
+INSERT INTO DMT_FLOOR values('E2','E','E관2층','지상2층','2');
+INSERT INTO DMT_FLOOR values('E3','E','E관3층','지상3층','3');
+INSERT INTO DMT_FLOOR values('E4','E','E관4층','지상4층','4');
+INSERT INTO DMT_FLOOR values('F1','F','F관1층','지상1층','1');
+INSERT INTO DMT_FLOOR values('F2','F','F관2층','지상2층','2');
+INSERT INTO DMT_FLOOR values('F3','F','F관3층','지상3층','3');
+INSERT INTO DMT_FLOOR values('F4','F','F관4층','지상4층','4');
+
+-------------------------호실 인서트-------------------------
+--A관 1층
+INSERT INTO DMT_ROOM values('A101','A1','A관 101호',2,'숙박','Y');
+INSERT INTO DMT_ROOM values('A102','A1','A관 102호',2,'숙박','Y');
+INSERT INTO DMT_ROOM values('A103','A1','A관 103호',2,'숙박','Y');
+INSERT INTO DMT_ROOM values('A104','A1','A관 104호',2,'숙박','Y');
+INSERT INTO DMT_ROOM values('A105','A1','A관 105호',2,'숙박','Y');
+--A관 2층
+INSERT INTO DMT_ROOM values('A201','A2','A관 201호',2,'숙박','Y');
+INSERT INTO DMT_ROOM values('A202','A2','A관 202호',2,'숙박','Y');
+INSERT INTO DMT_ROOM values('A203','A2','A관 203호',2,'숙박','Y');
+INSERT INTO DMT_ROOM values('A204','A2','A관 204호',2,'숙박','Y');
+INSERT INTO DMT_ROOM values('A205','A2','A관 205호',2,'숙박','Y');
+--A관 3층
+INSERT INTO DMT_ROOM values('A301','A3','A관 301호',2,'숙박','Y');
+INSERT INTO DMT_ROOM values('A302','A3','A관 302호',2,'숙박','Y');
+INSERT INTO DMT_ROOM values('A303','A3','A관 303호',2,'숙박','Y');
+INSERT INTO DMT_ROOM values('A304','A3','A관 304호',2,'숙박','Y');
+INSERT INTO DMT_ROOM values('A305','A3','A관 305호',2,'숙박','Y');
+--A관 4층
+INSERT INTO DMT_ROOM values('A401','A4','A관 401호',2,'숙박','Y');
+INSERT INTO DMT_ROOM values('A402','A4','A관 402호',2,'숙박','Y');
+INSERT INTO DMT_ROOM values('A403','A4','A관 403호',2,'숙박','Y');
+INSERT INTO DMT_ROOM values('A404','A4','A관 404호',2,'숙박','Y');
+INSERT INTO DMT_ROOM values('A405','A4','A관 405호',2,'숙박','Y');
+
+
+--B관 1층
+INSERT INTO DMT_ROOM values('B101','B1','B관 101호',3,'숙박','Y');
+INSERT INTO DMT_ROOM values('B102','B1','B관 102호',3,'숙박','Y');
+INSERT INTO DMT_ROOM values('B103','B1','B관 103호',3,'숙박','Y');
+INSERT INTO DMT_ROOM values('B104','B1','B관 104호',3,'숙박','Y');
+INSERT INTO DMT_ROOM values('B105','B1','B관 105호',3,'숙박','Y');
+--B관 2층
+INSERT INTO DMT_ROOM values('B201','B2','B관 201호',3,'숙박','Y');
+INSERT INTO DMT_ROOM values('B202','B2','B관 202호',3,'숙박','Y');
+INSERT INTO DMT_ROOM values('B203','B2','B관 203호',3,'숙박','Y');
+INSERT INTO DMT_ROOM values('B204','B2','B관 204호',3,'숙박','Y');
+INSERT INTO DMT_ROOM values('B205','B2','B관 205호',3,'숙박','Y');
+--B관 3층
+INSERT INTO DMT_ROOM values('B301','B3','B관 301호',3,'숙박','Y');
+INSERT INTO DMT_ROOM values('B302','B3','B관 302호',3,'숙박','Y');
+INSERT INTO DMT_ROOM values('B303','B3','B관 303호',3,'숙박','Y');
+INSERT INTO DMT_ROOM values('B304','B3','B관 304호',3,'숙박','Y');
+INSERT INTO DMT_ROOM values('B305','B3','B관 305호',3,'숙박','Y');
+--B관 4층
+INSERT INTO DMT_ROOM values('B401','B4','B관 401호',3,'숙박','Y');
+INSERT INTO DMT_ROOM values('B402','B4','B관 402호',3,'숙박','Y');
+INSERT INTO DMT_ROOM values('B403','B4','B관 403호',3,'숙박','Y');
+INSERT INTO DMT_ROOM values('B404','B4','B관 404호',3,'숙박','Y');
+INSERT INTO DMT_ROOM values('B405','B4','B관 405호',3,'숙박','Y');
+
+
+--C관 1층
+INSERT INTO DMT_ROOM values('C101','C1','C관 101호',4,'숙박','Y');
+INSERT INTO DMT_ROOM values('C102','C1','C관 102호',4,'숙박','Y');
+INSERT INTO DMT_ROOM values('C103','C1','C관 103호',4,'숙박','Y');
+INSERT INTO DMT_ROOM values('C104','C1','C관 104호',4,'숙박','Y');
+INSERT INTO DMT_ROOM values('C105','C1','C관 105호',4,'숙박','Y');
+--C관 2층
+INSERT INTO DMT_ROOM values('C201','C2','C관 201호',4,'숙박','Y');
+INSERT INTO DMT_ROOM values('C202','C2','C관 202호',4,'숙박','Y');
+INSERT INTO DMT_ROOM values('C203','C2','C관 203호',4,'숙박','Y');
+INSERT INTO DMT_ROOM values('C204','C2','C관 204호',4,'숙박','Y');
+INSERT INTO DMT_ROOM values('C205','C2','C관 205호',4,'숙박','Y');
+--C관 3층
+INSERT INTO DMT_ROOM values('C301','C3','C관 301호',4,'숙박','Y');
+INSERT INTO DMT_ROOM values('C302','C3','C관 302호',4,'숙박','Y');
+INSERT INTO DMT_ROOM values('C303','C3','C관 303호',4,'숙박','Y');
+INSERT INTO DMT_ROOM values('C304','C3','C관 304호',4,'숙박','Y');
+INSERT INTO DMT_ROOM values('C305','C3','C관 305호',4,'숙박','Y');
+--C관 4층
+INSERT INTO DMT_ROOM values('C401','C4','C관 401호',4,'숙박','Y');
+INSERT INTO DMT_ROOM values('C402','C4','C관 402호',4,'숙박','Y');
+INSERT INTO DMT_ROOM values('C403','C4','C관 403호',4,'숙박','Y');
+INSERT INTO DMT_ROOM values('C404','C4','C관 404호',4,'숙박','Y');
+INSERT INTO DMT_ROOM values('C405','C4','C관 405호',4,'숙박','Y');
+
+
+
+
+
+--D관 1층
+INSERT INTO DMT_ROOM values('D101','D1','D관 101호',2,'숙박','Y');
+INSERT INTO DMT_ROOM values('D102','D1','D관 102호',2,'숙박','Y');
+INSERT INTO DMT_ROOM values('D103','D1','D관 103호',2,'숙박','Y');
+INSERT INTO DMT_ROOM values('D104','D1','D관 104호',2,'숙박','Y');
+INSERT INTO DMT_ROOM values('D105','D1','D관 105호',2,'숙박','Y');
+--D관 2층
+INSERT INTO DMT_ROOM values('D201','D2','D관 201호',2,'숙박','Y');
+INSERT INTO DMT_ROOM values('D202','D2','D관 202호',2,'숙박','Y');
+INSERT INTO DMT_ROOM values('D203','D2','D관 203호',2,'숙박','Y');
+INSERT INTO DMT_ROOM values('D204','D2','D관 204호',2,'숙박','Y');
+INSERT INTO DMT_ROOM values('D205','D2','D관 205호',2,'숙박','Y');
+--D관 3층
+INSERT INTO DMT_ROOM values('D301','D3','D관 301호',2,'숙박','Y');
+INSERT INTO DMT_ROOM values('D302','D3','D관 302호',2,'숙박','Y');
+INSERT INTO DMT_ROOM values('D303','D3','D관 303호',2,'숙박','Y');
+INSERT INTO DMT_ROOM values('D304','D3','D관 304호',2,'숙박','Y');
+INSERT INTO DMT_ROOM values('D305','D3','D관 305호',2,'숙박','Y');
+--D관 4층
+INSERT INTO DMT_ROOM values('D401','D4','D관 401호',2,'숙박','Y');
+INSERT INTO DMT_ROOM values('D402','D4','D관 402호',2,'숙박','Y');
+INSERT INTO DMT_ROOM values('D403','D4','D관 403호',2,'숙박','Y');
+INSERT INTO DMT_ROOM values('D404','D4','D관 404호',2,'숙박','Y');
+INSERT INTO DMT_ROOM values('D405','D4','D관 405호',2,'숙박','Y');
+
+
+--E관 1층
+INSERT INTO DMT_ROOM values('E101','E1','E관 101호',3,'숙박','Y');
+INSERT INTO DMT_ROOM values('E102','E1','E관 102호',3,'숙박','Y');
+INSERT INTO DMT_ROOM values('E103','E1','E관 103호',3,'숙박','Y');
+INSERT INTO DMT_ROOM values('E104','E1','E관 104호',3,'숙박','Y');
+INSERT INTO DMT_ROOM values('E105','E1','E관 105호',3,'숙박','Y');
+--E관 2층
+INSERT INTO DMT_ROOM values('E201','E2','E관 201호',3,'숙박','Y');
+INSERT INTO DMT_ROOM values('E202','E2','E관 202호',3,'숙박','Y');
+INSERT INTO DMT_ROOM values('E203','E2','E관 203호',3,'숙박','Y');
+INSERT INTO DMT_ROOM values('E204','E2','E관 204호',3,'숙박','Y');
+INSERT INTO DMT_ROOM values('E205','E2','E관 205호',3,'숙박','Y');
+--E관 3층
+INSERT INTO DMT_ROOM values('E301','E3','E관 301호',3,'숙박','Y');
+INSERT INTO DMT_ROOM values('E302','E3','E관 302호',3,'숙박','Y');
+INSERT INTO DMT_ROOM values('E303','E3','E관 303호',3,'숙박','Y');
+INSERT INTO DMT_ROOM values('E304','E3','E관 304호',3,'숙박','Y');
+INSERT INTO DMT_ROOM values('E305','E3','E관 305호',3,'숙박','Y');
+--E관 4층
+INSERT INTO DMT_ROOM values('E401','E4','E관 401호',3,'숙박','Y');
+INSERT INTO DMT_ROOM values('E402','E4','E관 402호',3,'숙박','Y');
+INSERT INTO DMT_ROOM values('E403','E4','E관 403호',3,'숙박','Y');
+INSERT INTO DMT_ROOM values('E404','E4','E관 404호',3,'숙박','Y');
+INSERT INTO DMT_ROOM values('E405','E4','E관 405호',3,'숙박','Y');
+
+
+--F관 1층
+INSERT INTO DMT_ROOM values('F101','F1','F관 101호',4,'숙박','Y');
+INSERT INTO DMT_ROOM values('F102','F1','F관 102호',4,'숙박','Y');
+INSERT INTO DMT_ROOM values('F103','F1','F관 103호',4,'숙박','Y');
+INSERT INTO DMT_ROOM values('F104','F1','F관 104호',4,'숙박','Y');
+INSERT INTO DMT_ROOM values('F105','F1','F관 105호',4,'숙박','Y');
+--F관 2층
+INSERT INTO DMT_ROOM values('F201','F2','F관 201호',4,'숙박','Y');
+INSERT INTO DMT_ROOM values('F202','F2','F관 202호',4,'숙박','Y');
+INSERT INTO DMT_ROOM values('F203','F2','F관 203호',4,'숙박','Y');
+INSERT INTO DMT_ROOM values('F204','F2','F관 204호',4,'숙박','Y');
+INSERT INTO DMT_ROOM values('F205','F2','F관 205호',4,'숙박','Y');
+--F관 3층
+INSERT INTO DMT_ROOM values('F301','F3','F관 301호',4,'숙박','Y');
+INSERT INTO DMT_ROOM values('F302','F3','F관 302호',4,'숙박','Y');
+INSERT INTO DMT_ROOM values('F303','F3','F관 303호',4,'숙박','Y');
+INSERT INTO DMT_ROOM values('F304','F3','F관 304호',4,'숙박','Y');
+INSERT INTO DMT_ROOM values('F305','F3','F관 305호',4,'숙박','Y');
+--F관 4층
+INSERT INTO DMT_ROOM values('F401','F4','F관 401호',4,'숙박','Y');
+INSERT INTO DMT_ROOM values('F402','F4','F관 402호',4,'숙박','Y');
+INSERT INTO DMT_ROOM values('F403','F4','F관 403호',4,'숙박','Y');
+INSERT INTO DMT_ROOM values('F404','F4','F관 404호',4,'숙박','Y');
+INSERT INTO DMT_ROOM values('F405','F4','F관 405호',4,'숙박','Y');
+
+--------------------------------------------------------------------------------------------------
+--학생 600명 더미데이터 만들기 (한학년 (declare에 grade 1 2 3 4) 150명씩 4번 돌려야됨)
+1학년부터 순서대로 돌릴것
+
+DROP SEQUENCE STUD_seq;
+CREATE SEQUENCE STUD_seq;
+
+DECLARE
+	grade NUMBER := 4;
+BEGIN
+	 FOR i IN 1..150
+	 LOOP
+		INSERT INTO CBH_STUD values(
+			(2023-grade)*10000+ (1000*grade) +i,
+			'1',
+			'학생'||STUD_seq.nextval,
+			'010-1234-5678',
+			'abc@def.com',
+			MOD(STUD_seq.currval,2),
+			'1991-12-14',
+			grade,
+			'정보통신학과',
+			NULL,
+			0,
+			sysdate,
+			'재학'
+		);
+	END LOOP;
+	UPDATE CBH_STUD SET STUD_GENDER = '남자' WHERE STUD_GENDER = '0';
+	UPDATE CBH_STUD SET STUD_GENDER = '여자' WHERE STUD_GENDER = '1';
+END;
+
+
+DROP SEQUENCE DMT_STUD_SCORE_seq;
+CREATE SEQUENCE DMT_STUD_SCORE_seq;
+
+ 
+--더미데이터 생성(한학년 (declare에 grade 1 2 3 4) 150명씩 4번 돌려야됨)
+1학년부터 순서대로 돌릴것
+위에 학생정보랑 순서가 같아야함
+
+DECLARE
+  grade NUMBER := 4;
+BEGIN
+	 FOR i IN 1..150
+	 LOOP
+		INSERT INTO DMT_STUD_SCORE values(
+			DMT_STUD_SCORE_seq.nextval,
+			(2023-grade)*10000+ (1000*grade) +i,
+			(TRUNC(dbms_random.value(10,46))/10)
+		);
+	END LOOP;
+END;
+
+
+
+--신청서 600개 넣기(한학년당 150개 4번돌려야됨. 학생테이블 학번과 똑같이 매칭됨. declare에 grade만 1 2 3 4 넣고 각각 돌리셈)
+DECLARE
+  grade number := 4;
+BEGIN
+	 FOR i IN 1..150
+	 LOOP
+		INSERT INTO DMT_APPL values(
+			DMT_APPL_seq.nextval,
+			grade,
+			(2023-grade)*10000 + (1000*grade) +i,
+			null,
+			(SELECT CASE
+					WHEN random = 1 THEN 'A'
+					WHEN random = 2 THEN 'B'
+					WHEN random = 3 THEN 'C'
+					WHEN random = 4 THEN 'D'
+					WHEN random = 5 THEN 'E'
+					WHEN random = 6 THEN 'F'
+					END AS APPL_CHOICE   
+			FROM (SELECT TRUNC(dbms_random.value(1,4))+3*MOD(i,2) AS random FROM dual)),
+			sysdate,
+			'N',
+			'N',
+			'123-456',
+			'학생주소',
+			'학생상세주소',
+			'김부모',
+			'부모님연락처',
+			'아들놈',
+			'123-456',
+			'부모집주소',
+			'부모상세주소'
+		);
+	END LOOP;
+    COMMIT;
+END;
+
+
+
+
+----------------생활관비 기준-----------------(10/08 수정)
+INSERT INTO DMT_ENT_FEE_STD values(	dmt_ent_fee_std_seq.nextval, '학기',	'A',	1500000);
+INSERT INTO DMT_ENT_FEE_STD values(	dmt_ent_fee_std_seq.nextval, '학기',	'B',	1300000);
+INSERT INTO DMT_ENT_FEE_STD values(	dmt_ent_fee_std_seq.nextval, '학기',	'C',	1100000);
+INSERT INTO DMT_ENT_FEE_STD values(	dmt_ent_fee_std_seq.nextval, '학기',	'D',	1500000);
+INSERT INTO DMT_ENT_FEE_STD values(	dmt_ent_fee_std_seq.nextval, '학기', 'E', 	1300000);
+INSERT INTO DMT_ENT_FEE_STD values(	dmt_ent_fee_std_seq.nextval, '학기',	'F',	1100000);
+
+INSERT INTO DMT_ENT_FEE_STD values(	dmt_ent_fee_std_seq.nextval, '방학',	'A',	900000);
+INSERT INTO DMT_ENT_FEE_STD values(	dmt_ent_fee_std_seq.nextval, '방학',	'B',	750000);
+INSERT INTO DMT_ENT_FEE_STD values(	dmt_ent_fee_std_seq.nextval, '방학',	'C',	600000);
+INSERT INTO DMT_ENT_FEE_STD values(	dmt_ent_fee_std_seq.nextval, '방학',	'D',	900000);
+INSERT INTO DMT_ENT_FEE_STD values(	dmt_ent_fee_std_seq.nextval, '방학', 'E', 	750000);
+INSERT INTO DMT_ENT_FEE_STD values(	dmt_ent_fee_std_seq.nextval, '방학',	'F',	600000);
+
+
+
+
+
+------직원 직급 인서트----
+INSERT INTO CBH_PSTN_DIV VALUES(CBH_PSTN_DIV_seq.nextval,'사원','employee',NULL,'1');
+INSERT INTO CBH_PSTN_DIV VALUES(CBH_PSTN_DIV_seq.nextval,'과장','section chief',NULL,'1');
+INSERT INTO CBH_PSTN_DIV VALUES(CBH_PSTN_DIV_seq.nextval,'부장','head of department',NULL,'1');
+INSERT INTO CBH_PSTN_DIV VALUES(CBH_PSTN_DIV_seq.nextval,'총장','chancellor',NULL,'1');

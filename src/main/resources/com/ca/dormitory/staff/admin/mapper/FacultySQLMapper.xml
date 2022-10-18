@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ca.dormitory.staff.admin.mapper.FacultySQLMapper">
+
+	<select id="selectByStaffNo" resultType="com.ca.dormitory.vo.StaffVo">
+		SELECT * FROM CBH_STAFF WHERE staff_id = #{no}
+	</select>
+
+	<select id="selectCountByStaffId" resultType="int">
+		SELECT COUNT(*) FROM DMT_ADMIN WHERE staff_id = #{staffId}
+	</select>
+	
+	<select id="selectFacultyList" resultType="com.ca.dormitory.vo.StaffVo">
+		SELECT * FROM CBH_STAFF
+	</select>
+	
+	<select id="selectStaff" resultType="map">
+		SELECT * 
+		FROM CBH_STAFF cs , CBH_PSTN_DIV cpd
+		WHERE cs.PSTN_DIV_NO = cpd.pstn_div_no
+		AND cs.STAFF_ID = #{staff_id}
+	</select>
+</mapper>

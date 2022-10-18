@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ca.dormitory.staff.dormitoryEnterApproval.mapper.DormitoryEnterApprovalSQLMapper">
+	<select id="selectAllFrom$DMT_ENT_INFO" resultType="HashMap">
+		SELECT * FROM DMT_ENT_INFO ORDER BY ENT_REG_DATE desc
+	</select>
+	
+	<select id="selectAllFrom$DMT_RECR_INFO" resultType="HashMap">
+		SELECT * FROM DMT_RECR_INFO WHERE ENT_NO=#{selectedEntNO} ORDER BY recr_no asc
+	</select>
+
+	<select id="selectAllJoinTable$CBH_STUD$DMT_APPL$DMT_RECR_INFO$DMT_STUD_SCORE" resultType="HashMap">
+		SELECT *
+		FROM CBH_STUD cs1, DMT_APPL da1, DMT_RECR_INFO dri1, DMT_STUD_SCORE dsc1
+		WHERE	da1.STUD_ID = cs1.STUD_ID
+			AND da1.RECR_NO = dri1.RECR_NO
+			AND cs1.STUD_ID = dsc1.STUD_ID 
+			AND dri1.ENT_NO = #{ENT_NO}
+		<if test='RECR_NO!=0'>
+			AND dri1.RECR_NO = #{RECR_NO}
+		</if>
+		<if test='APPL_YN!="0"'>
+			AND da1.APPL_YN=#{APPL_YN}
+		</if>
+		<if test='STUD_NAME!=""'>
+			AND cs1.STUD_NAME like '%'||#{STUD_NAME}||'%'
+		</if>
+		<if test='STUD_GENDER!="0"'>
+			AND cs1.STUD_GENDER=#{STUD_GENDER}
+		</if>
+		<if test='allocationMethod=="지망신청"'>
+			AND da1.APPL_CHOICE IS NOT NULL
+		</if>
+		<if test='allocationMethod=="임의배정"'>
+			AND da1.APPL_CHOICE IS NULL
+		</if>
+		order by dsc1.STUD_LAST_SCORE DESC, da1.APPL_DATE asc, cs1.STUD_ID ASC
+	</select>
+
+	<select id="selectOneJoinTableByAPPL_NO$CBH_STUD$DMT_APPL$DMT_RECR_INFO$DMT_STUD_SCORE" resultType="HashMap">
+		SELECT *
+		FROM CBH_STUD cs1, DMT_APPL da1, DMT_RECR_INFO dri1, DMT_STUD_SCORE dsc1
+		WHERE	da1.STUD_ID = cs1.STUD_ID
+			AND da1.RECR_NO = dri1.RECR_NO
+			AND cs1.STUD_ID = dsc1.STUD_ID 
+			AND APPL_NO=#{APPL_NO}
+	</select>
+	
+	<update id="updateDMT_APPLByAPPL_NO">
+		UPDATE DMT_APPL
+			SET 
+				GRDN_NAME=#{GRDN_NAME},
+				GRDN_PHONE=#{GRDN_PHONE},
+				GRDN_RELATION=#{GRDN_RELATION},
+				GRDN_ZIPCODE=#{GRDN_ZIPCODE},
+				GRDN_ADDR1=#{GRDN_ADDR1},
+				GRDN_ADDR2=#{GRDN_ADDR2}
+			WHERE APPL_NO=#{APPL_NO}
+	</update>
+	
+	<select id="selectRECR_DIVFromDMT_RECR_INFOByRECR_NO" resultType="Object">
+		SELECT RECR_DIV FROM DMT_RECR_INFO WHERE RECR_NO = #{RECR_NO}
+	</select>
+	
+	<select id="selectCountPassedMaleFromJoinTableByRECR_NO$ENT_NO" resultType="Object">
+		SELECT count(*)
+			FROM CBH_STUD cs1, DMT_APPL da1, DMT_RECR_INFO dri1, DMT_STUD_SCORE dsc1
+			WHERE	da1.STUD_ID = cs1.STUD_ID
+				AND da1.RECR_NO = dri1.RECR_NO
+				AND cs1.STUD_ID = dsc1.STUD_ID
+				AND cs1.STUD_GENDER = '남자'
+				AND APPL_YN = 'Y'
+				AND dri1.ENT_NO = #{ENT_NO}
+				<if test = "RECR_NO != 0">
+				AND dri1.RECR_NO = #{RECR_NO}
+				</if>
+	</select>
+	
+	<select id="selectCountPassedFemaleFromJoinTableByRECR_NO$ENT_NO" resultType="Object">
+		SELECT count(*)
+			FROM CBH_STUD cs1, DMT_APPL da1, DMT_RECR_INFO dri1, DMT_STUD_SCORE dsc1
+			WHERE	da1.STUD_ID = cs1.STUD_ID
+				AND da1.RECR_NO = dri1.RECR_NO
+				AND cs1.STUD_ID = dsc1.STUD_ID
+				AND cs1.STUD_GENDER = '여자'
+				AND APPL_YN = 'Y'
+				AND dri1.ENT_NO = #{ENT_NO}
+				<if test = "RECR_NO != 0">
+				AND dri1.RECR_NO = #{RECR_NO}
+				</if>
+	</select>
+	
+	<select id="selectCountMaleFixedNumberFromJoinTableByRECR_NO$ENT_NO" resultType="Object">
+		SELECT sum(dr1.ROOM_BED_CNT)
+			FROM DMT_BLDG db1, DMT_FLOOR df1, DMT_ROOM dr1
+			WHERE	db1.BLDG_CODE=df1.BLDG_CODE
+				AND	df1.FLOOR_CODE = dr1.FLOOR_CODE
+				AND db1.BLDG_GENDER_DIV='남자'
+				<if test = 'RECR_DIV != "0"'>
+				AND df1.FLOOR_GRADE_DIV=#{RECR_DIV}
+				</if>
+	</select>
+	
+	<select id="selectCountFemaleFixedNumberFromJoinTableByRECR_NO$ENT_NO" resultType="Object">
+		SELECT sum(dr1.ROOM_BED_CNT)
+			FROM DMT_BLDG db1, DMT_FLOOR df1, DMT_ROOM dr1
+			WHERE	db1.BLDG_CODE=df1.BLDG_CODE
+				AND	df1.FLOOR_CODE = dr1.FLOOR_CODE
+				AND db1.BLDG_GENDER_DIV='여자'
+				<if test = 'RECR_DIV != "0"'>
+				AND df1.FLOOR_GRADE_DIV=#{RECR_DIV}
+				</if>
+	</select>
+	
+	<update id="updateAPPL_YNToYbyAPPL_NO">
+		UPDATE DMT_APPL
+		<if test='approvalYN=="Y"'>
+		SET APPL_YN = 'Y'
+		</if>
+		<if test='approvalYN=="N"'>
+		SET APPL_YN = 'N'
+		</if>
+		<if test='approvalYN=="W"'>
+		SET APPL_YN = 'W'
+		</if>
+		WHERE APPL_NO=#{APPL_NO}
+	</update>
+	
+	<select id="selectSTUD_GENDERFromJoinTableByAPPL_NO" resultType="Object">
+		SELECT cs1.STUD_GENDER FROM DMT_APPL da1 ,CBH_STUD cs1 WHERE da1.STUD_ID = cs1.STUD_ID AND da1.APPL_NO=#{APPL_NO}
+	</select>
+	
+	<update id="updateAutoApprovalQuery1">
+	
+		UPDATE DMT_APPL
+		SET APPL_YN = 'Y'
+		WHERE RECR_NO=#{RECR_NO}
+		AND APPL_NO IN(
+						SELECT t1.appl_no FROM (
+												SELECT rownum rnum1,t1.* FROM (SELECT da1.*,cs1.STUD_GENDER
+												FROM DMT_APPL da1, CBH_STUD cs1, DMT_STUD_SCORE dss1 
+												WHERE da1.STUD_ID=cs1.STUD_ID
+												AND cs1.STUD_ID =dss1.STUD_ID 
+												AND da1.RECR_NO=#{RECR_NO}
+												AND cs1.STUD_GENDER =#{STUD_GENDER}
+												AND APPL_YN = 'W'
+												ORDER BY dss1.STUD_LAST_SCORE DESC, da1.APPL_DATE, cs1.STUD_ID ASC)t1) t1
+																									 <![CDATA[
+																									WHERE rnum1>0 
+																									AND rnum1<=	
+																									]]>
+																												(
+																													SELECT sum(dr1.ROOM_BED_CNT)
+																													FROM DMT_BLDG db1, DMT_FLOOR df1, DMT_ROOM dr1
+																													WHERE	db1.BLDG_CODE=df1.BLDG_CODE
+																														AND	df1.FLOOR_CODE = dr1.FLOOR_CODE
+																														AND dr1.ROOM_USE_YN = 'Y'
+																														AND db1.BLDG_GENDER_DIV=#{STUD_GENDER}
+																														AND df1.FLOOR_GRADE_DIV=(
+																																				SELECT RECR_DIV
+																																				FROM DMT_RECR_INFO
+																																				WHERE RECR_NO =#{RECR_NO}))
+																												-(
+																													SELECT count(*)
+																													FROM DMT_APPL da1 ,CBH_STUD cs1
+																													WHERE da1.STUD_ID = cs1.STUD_ID 
+																													AND da1.APPL_YN='Y'
+																													AND da1.RECR_NO=#{RECR_NO}
+																													AND cs1.STUD_GENDER =#{STUD_GENDER}
+																												))
+	
+	</update>
+	
+	<update id="updateAutoApprovalQuery2">
+		UPDATE DMT_APPL SET APPL_YN = 'N' WHERE APPL_NO in(
+															SELECT da1.APPL_NO  FROM DMT_APPL da1, CBH_STUD cs1
+															WHERE da1.STUD_ID =cs1.STUD_ID
+															AND da1.RECR_NO=#{RECR_NO} AND da1.APPL_YN = 'W' AND cs1.STUD_GENDER =#{STUD_GENDER})
+	</update>
+</mapper>

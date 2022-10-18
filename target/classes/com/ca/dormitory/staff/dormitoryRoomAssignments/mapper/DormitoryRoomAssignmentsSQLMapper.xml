@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ca.dormitory.staff.dormitoryRoomAssignments.mapper.DormitoryRoomAssignmentsSQLMapper">
+
+	<select id="selectAllDMT_BLDG" resultType="HashMap">
+		SELECT * FROM DMT_BLDG ORDER BY BLDG_CODE asc
+	</select>
+
+	<select id="selectAll$DMT_RECR_INFO$DMT_APPL$CBH_STUD$DMT_STUD_SCORE" resultType="HashMap">
+		SELECT da1.APPL_NO, cs1.STUD_ID, cs1.STUD_GRADE, cs1.STUD_NAME, cs1.STUD_GENDER, da1.APPL_CHOICE
+		FROM DMT_RECR_INFO dri1, DMT_APPL da1, CBH_STUD cs1
+		WHERE da1.RECR_NO = dri1.RECR_NO AND da1.STUD_ID = cs1.STUD_ID
+		AND dri1.ENT_NO = #{ENT_NO}
+		AND da1.APPL_YN ='Y'
+		AND da1.ROOM_CODE IS NULL
+		ORDER BY cs1.STUD_GRADE ASC, cs1.STUD_GENDER ASC, da1.APPL_DATE ASC, cs1.STUD_ID ASC
+	</select>
+	
+<!-- 	<select id="selectAll$DMT_BLDG$DMT_FLOOR$DMT_ROOM" resultType="HashMap"> -->
+<!-- 		SELECT * FROM DMT_BLDG db1, DMT_FLOOR df1, DMT_ROOM dr1 -->
+<!-- 			WHERE db1.BLDG_CODE = df1.BLDG_CODE AND df1.FLOOR_CODE = dr1.FLOOR_CODE -->
+<!-- 	</select> -->
+
+	<select id="selectAll$DMT_BLDG$DMT_FLOOR$DMT_ROOM" resultType="HashMap">
+		SELECT  
+				dr.ROOM_CODE,
+				dr.ROOM_NAME,
+		        db.BLDG_GENDER_DIV,
+		        df.FLOOR_GRADE_DIV,
+		        dr.ROOM_BED_CNT,
+		        count(da.ROOM_CODE) AS SLCT_CNT,
+		        da.RECR_NO 
+		FROM DMT_BLDG db , DMT_FLOOR df , DMT_ROOM dr 
+		LEFT JOIN (SELECT *
+					FROM DMT_APPL
+					WHERE recr_no 	IN 
+										(SELECT RECR_NO
+										FROM DMT_RECR_INFO dri
+										WHERE ENT_NO = #{ENT_NO})) da 
+									ON (dr.ROOM_CODE = da.ROOM_CODE)
+		WHERE db.BLDG_CODE = df.BLDG_CODE
+		AND dr.ROOM_USE_YN = 'Y'
+		AND df.FLOOR_CODE = dr.FLOOR_CODE
+		GROUP BY dr.ROOM_CODE ,dr.ROOM_NAME,df.FLOOR_GRADE_DIV, db.BLDG_GENDER_DIV, dr.ROOM_BED_CNT, da.RECR_NO
+		ORDER BY dr.ROOM_CODE
+	</select>
+	
+	<select id="selectCountAll$CBH_STUD$DMT_APPL$DMT_RECR_INFO$DMT_FLOOR$DMT_ROOM$ByENT_NO$ROOM_CODE" resultType="HashMap">
+		SELECT count(*)
+		FROM CBH_STUD cs
+		WHERE STUD_ID IN(SELECT STUD_ID
+						FROM DMT_APPL
+						WHERE ROOM_CODE = #{ROOM_CODE}
+						and RECR_NO = (SELECT RECR_NO 
+										FROM DMT_RECR_INFO
+										WHERE ENT_NO=#{ENT_NO}
+										AND RECR_DIV=(SELECT FLOOR_GRADE_DIV
+														FROM DMT_FLOOR
+														WHERE FLOOR_CODE = (SELECT FLOOR_CODE
+																			FROM DMT_ROOM
+																			WHERE ROOM_CODE = #{ROOM_CODE}))))
+	</select>
+	
+	
+	<select id="selectAllCBH_STUDFrom$CBH_STUD$DMT_APPL$DMT_RECR_INFO$DMT_FLOOR$DMT_ROOM$ByENT_NO$ROOM_CODE" resultType="HashMap">
+		SELECT *
+		FROM CBH_STUD cs
+		WHERE STUD_ID IN(SELECT STUD_ID
+						FROM DMT_APPL
+						WHERE ROOM_CODE = #{ROOM_CODE}
+						and RECR_NO = (SELECT RECR_NO
+										FROM DMT_RECR_INFO
+										WHERE ENT_NO=#{ENT_NO}
+										AND RECR_DIV=(SELECT FLOOR_GRADE_DIV
+														FROM DMT_FLOOR
+														WHERE FLOOR_CODE = (SELECT FLOOR_CODE
+																			FROM DMT_ROOM
+																			WHERE ROOM_CODE = #{ROOM_CODE}))))
+	</select>
+	
+	<select id="selectAllFromDMT_ROOMByROOM_CODE" resultType="HashMap">
+		SELECT * FROM DMT_ROOM dr1, DMT_FLOOR df1, DMT_BLDG db1
+		WHERE dr1.FLOOR_CODE = DF1.FLOOR_CODE
+		AND df1.BLDG_CODE = db1.BLDG_CODE
+		AND dr1.ROOM_CODE = #{ROOM_CODE}
+	</select>
+	
+	<update id="updateROOM_CODEFromDMT_APPLByAPPL_NO">
+		UPDATE DMT_APPL SET ROOM_CODE=#{ROOM_CODE} WHERE APPL_NO = #{APPL_NO}
+	</update>
+	
+	<insert id="insertDMT_ENT_FEE_DTLByAPPL_NO">
+		INSERT INTO DMT_ENT_FEE_DTL (fee_dtl_no, appl_no, ent_fee_std_no, vr_account)
+		SELECT  dmt_ent_fee_dtl_seq.nextval,
+				da.APPL_NO , 
+				defs.ENT_FEE_STD_NO,
+				to_char(TRUNC(dbms_random.value(1000000000,9999999999)))
+		FROM DMT_ENT_FEE_STD defs , DMT_ENT_INFO dei , DMT_RECR_INFO dri , DMT_APPL da
+		WHERE defs.ent_term_div = dei.ENT_TERM_DIV 
+		AND dri.ENT_NO = dei.ENT_NO 
+		AND dri.RECR_NO = da.RECR_NO 
+		AND SUBSTR(da.ROOM_CODE,1,1) = defs.BLDG_CODE 
+		AND da.APPL_NO = #{APPL_NO}
+	</insert>
+	
+	<select id="selectCBH_STUDJoinTableBySTUD_ID$ENT_NO" resultType="HashMap">
+		SELECT *
+			FROM CBH_STUD cs, DMT_RECR_INFO dri, DMT_ENT_INFO dei, DMT_APPL da	LEFT JOIN DMT_ROOM dr 
+																				ON(dr.ROOM_CODE = da.ROOM_CODE)
+			WHERE da.RECR_NO = dri.RECR_NO
+			AND dri.ENT_NO = dei.ENT_NO
+			AND cs.STUD_ID = da.STUD_ID
+			AND da.STUD_ID = #{STUD_ID}
+			AND dei.ENT_NO = #{ENT_NO}
+	</select>
+	
+	<update id="updateROOM_CODEFromDMT_APPLByENT_NOandSTUD_ID">
+		UPDATE DMT_APPL
+		SET ROOM_CODE = null 
+		WHERE RECR_NO IN
+						(SELECT RECR_NO
+						FROM DMT_RECR_INFO
+						WHERE ENT_NO = #{ENT_NO})
+		AND STUD_ID = #{STUD_ID}
+	</update>
+	
+	<delete id="deleteDMT_ENT_FEE_DTLByENT_NOandSTUD_ID">
+		DELETE FROM DMT_ENT_FEE_DTL
+		WHERE APPL_NO = (SELECT APPL_NO FROM DMT_APPL 
+						WHERE RECR_NO IN (SELECT RECR_NO
+										  FROM DMT_RECR_INFO
+										  WHERE ENT_NO = #{ENT_NO})
+		AND STUD_ID = #{STUD_ID})
+	</delete>
+	
+	<select id="selectRownumAndApplDataByENT_NOAndSTUD_ID" resultType="HashMap">
+		SELECT ROWN1,APPL_NO,STUD_ID,STUD_GRADE,STUD_NAME,STUD_GENDER,APPL_CHOICE
+		from 
+			(SELECT rownum rown1,t1.* from	(SELECT da1.APPL_NO, cs1.STUD_ID, cs1.STUD_GRADE, cs1.STUD_NAME, cs1.STUD_GENDER, da1.APPL_CHOICE
+											FROM DMT_RECR_INFO dri1, DMT_APPL da1, CBH_STUD cs1
+											WHERE da1.RECR_NO = dri1.RECR_NO AND da1.STUD_ID = cs1.STUD_ID
+											AND dri1.ENT_NO = #{ENT_NO}
+											AND da1.APPL_YN ='Y'
+											AND da1.ROOM_CODE IS NULL
+											ORDER BY cs1.STUD_GRADE ASC, cs1.STUD_GENDER ASC, da1.APPL_DATE ASC, cs1.STUD_ID ASC) t1
+			) t2
+		WHERE STUD_ID=#{STUD_ID}
+	</select>
+</mapper>

@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ca.dormitory.staff.dormitoryLife.mapper.DormitoryLifeSQLMapper">
+	
+	<!-- 직원+생활관담당자 -->
+	<select id="selectStaffAndAdminByID" resultType="Map">
+		SELECT * FROM DMT_ADMIN da , CBH_STAFF cs WHERE da.STAFF_ID =cs.STAFF_ID 
+		AND cs.STAFF_ID = #{staffID} AND cs.STAFF_STATE = 'Y'
+	</select>
+	
+	<!-- 직원+셍활담당자 : adminNo로 가져오기 -->
+	<select id="selectStaffAndAdminByNo" resultType="Map">
+	SELECT * FROM CBH_STAFF cs , DMT_ADMIN da WHERE cs.STAFF_ID = da.STAFF_ID 
+	AND da.ADMIN_NO = #{no}
+	</select>
+	
+	<!-- 외박기준내역 -->
+	<select id="selectACTStandardList" resultType="com.ca.dormitory.vo.ActStdVo">
+		SELECT * FROM DMT_ACT_STD	
+	</select>
+	
+	<select id="selectActStandardByNo" resultType="com.ca.dormitory.vo.ActStdVo">
+		SELECT * FROM DMT_ACT_STD das WHERE das.ACT_CD = #{no}
+	</select>
+
+<!-- 와박기준이랑 날짜로 외박신청리스트 조회하기 -->
+	<select id="selectACTListByStanAndReqDT" resultType="com.ca.dormitory.vo.ActDtlVo">
+		SELECT * FROM DMT_ACT_DTL dad WHERE ACT_CD = #{act_cd} 
+		AND TO_CHAR(act_req_dt,'YYYY-MM-DD') = #{actReqDate} 
+		ORDER BY dad.ACT_NO DESC
+	</select>
+	<!-- 동적쿼리: 외박신청 리스트조회하기 -->
+	<select id="selectACTList" resultType="com.ca.dormitory.vo.ActDtlVo">
+		SELECT dad.* FROM 
+		DMT_ENT_STUD des, DMT_ROOM dr , DMT_FLOOR df , DMT_BLDG db, DMT_ACT_DTL dad, DMT_APPL da, CBH_STUD cs 
+		WHERE des.ROOM_CODE = dr.ROOM_CODE AND dr.FLOOR_CODE =df.FLOOR_CODE 
+		AND des.ENT_STUD_NO = da.APPL_NO AND da.STUD_ID = cs.STUD_ID 
+		AND df.BLDG_CODE =db.BLDG_CODE AND des.ENT_STUD_NO = dad.ENT_STUD_NO
+		AND TO_CHAR(dad.act_req_dt,'YYYY-MM-DD') = #{actReqDate}  
+		<trim>
+			<if test='act_cd != null'>
+				AND dad.ACT_CD = #{act_cd}
+			</if>
+		</trim>	
+		<trim>
+			<if test='act_conf_yn != null'>
+				AND dad.ACT_CONF_YN = #{act_conf_yn}
+			</if>	
+		</trim>
+		<trim>
+			<if test='bldg_code != null'>
+				AND db.BLDG_CODE = #{bldg_code}
+			</if>
+		</trim>
+		<trim>
+			<if test='stud_id != null'>
+				AND cs.STUD_ID = #{stud_id}
+			</if>
+		</trim>
+		<trim>
+			<if test='stud_name != null'>
+				AND cs.STUD_NAME LIKE '%'|| #{stud_name}|| '%'
+			</if>
+		</trim>
+		ORDER BY dad.ACT_NO DESC
+	</select>
+	
+	<select id="CountselectedActList" resultType="int">
+		SELECT COUNT(*) FROM 
+		DMT_ENT_STUD des, DMT_ROOM dr , DMT_FLOOR df , DMT_BLDG db, DMT_ACT_DTL dad, DMT_APPL da, CBH_STUD cs 
+		WHERE des.ROOM_CODE = dr.ROOM_CODE AND dr.FLOOR_CODE =df.FLOOR_CODE 
+		AND des.ENT_STUD_NO = da.APPL_NO AND da.STUD_ID = cs.STUD_ID 
+		AND df.BLDG_CODE =db.BLDG_CODE AND des.ENT_STUD_NO = dad.ENT_STUD_NO
+		AND TO_CHAR(dad.act_req_dt,'YYYY-MM-DD') = #{actReqDate}  
+		<trim>
+			<if test='act_cd != null'>
+				AND dad.ACT_CD = #{act_cd}
+			</if>
+		</trim>	
+		<trim>
+			<if test='act_conf_yn != null'>
+				AND dad.ACT_CONF_YN = #{act_conf_yn}
+			</if>	
+		</trim>
+		<trim>
+			<if test='bldg_code != null'>
+				AND db.BLDG_CODE = #{bldg_code}
+			</if>
+		</trim>
+		<trim>
+			<if test='stud_id != null'>
+				AND cs.STUD_ID = #{stud_id}
+			</if>
+		</trim>
+		<trim>
+			<if test='stud_name != null'>
+				AND cs.STUD_NAME LIKE '%'|| #{stud_name}|| '%'
+			</if>
+		</trim>
+		ORDER BY dad.ACT_NO DESC	
+	</select>
+	
+<!-- 	<select id="selectEntNoByStudInfo" resultType="int">
+		SELECT * FROM (
+			SELECT t1.*,ROWNUM AS rnum FROM (
+				SELECT des.ent_stud_no
+				FROM DMT_APPL da, DMT_ENT_STUD des , CBH_STUD cs 
+				WHERE da.APPL_NO = des.APPL_NO AND cs.STUD_ID =da.STUD_ID
+				<trim>
+					<if test='stud_id != null'>
+					AND cs.STUD_ID = #{stud_id}
+				</if> 	
+				</trim>
+				<trim>
+					<if test='stud_name != null'>
+						AND cs.STUD_NAME = #{stud_name}
+					</if>				
+				</trim> 
+				ORDER BY da.APPL_NO DESC
+			)t1
+		)t2 WHERE t2.rnum = '1'		
+	</select> -->
+	
+	<select id="selectBLDGList" resultType="com.ca.dormitory.vo.BldgVo"> <!-- 호관정보 -->
+		SELECT * FROM DMT_BLDG
+	</select>
+	
+	<!-- 관생NO로 조회: 호관+호관층+호실 -->
+	<select id="selectConstructionInfoBYNo" resultType="Map">
+		SELECT * FROM DMT_BLDG db, DMT_FLOOR df, DMT_ROOM dr, DMT_ENT_STUD des WHERE db.BLDG_CODE =df.BLDG_CODE 
+		AND df.FLOOR_CODE = dr.FLOOR_CODE AND dr.ROOM_CODE = des.ROOM_CODE 
+		AND des.ENT_STUD_NO = #{no}	
+	</select>
+	
+	<!-- 관생NO로 조회: 학생정보 -->
+	<select id="selectStudInfoByNo" resultType="Map">
+		SELECT cs.STUD_ID, cs.stud_name ,cs.stud_phone, cs.stud_gender, cs.stud_grade,cs.stud_dept, 
+		des.ENT_STUD_NO , des.ROOM_CODE , des.ENT_NO , da.APPL_NO, da.RECR_NO,da.APPL_DATE , 
+		da.STUD_ZIPCODE , da.STUD_ADDR1 , da.STUD_ADDR2 , da.GRDN_NAME ,da.GRDN_PHONE
+		FROM DMT_APPL da, DMT_ENT_STUD des , CBH_STUD cs 
+		WHERE da.APPL_NO = des.APPL_NO AND cs.STUD_ID =da.STUD_ID 
+		AND des.ENT_STUD_NO = #{no}
+	</select>
+	
+	<select id="selectActDtlByNo" resultType="com.ca.dormitory.vo.ActDtlVo">
+		SELECT dad.* FROM DMT_ACT_DTL dad, DMT_ENT_STUD des 
+		WHERE dad.ENT_STUD_NO = des.ENT_STUD_NO and dad.ACT_NO =#{no}	
+	</select>
+<!-- 외박승인 -->
+	<update id="updateActConf">
+		UPDATE DMT_ACT_DTL dad SET dad.ACT_CONF_YN = 'Y' 
+		WHERE dad.ACT_CONF_YN = 'N' AND dad.ACT_NO = #{no}
+	</update>
+	
+	<!-- 벌점관리 시작!!!!! -->
+	<select id="entInfoList" resultType="com.ca.dormitory.vo.EntInfoVo"> 	<!-- 입사단위정보 가져오기 -->
+		SELECT * FROM DMT_ENT_INFO dei ORDER BY ent_no DESC	
+	</select>
+	
+	<select id="selectStudByEntNoAndBldg" resultType="Map">
+		SELECT * FROM DMT_ENT_STUD des, DMT_APPL da , CBH_STUD cs , DMT_ROOM dr , DMT_FLOOR df , DMT_BLDG db 
+		WHERE des.APPL_NO =da.APPL_NO AND da.STUD_ID =cs.STUD_ID 
+		AND des.ROOM_CODE =dr.ROOM_CODE AND dr.FLOOR_CODE = df.FLOOR_CODE 
+		AND df.BLDG_CODE =db.BLDG_CODE
+		AND des.ENT_NO = #{ent_no} AND db.BLDG_CODE = #{bldg_code}
+		ORDER BY cs.STUD_ID ASC	
+	</select>
+	
+	<!-- 여기서부터 다시 합쳐야함 -->
+	<!-- 벌점기준 리스트 -->
+	<select id="penStdList" resultType="com.ca.dormitory.vo.PenStdVo">
+		SELECT * FROM DMT_PEN_STD
+	</select>
+	
+	<!-- 벌점 가져오기 -->
+	<select id="selectPenPTByCD" resultType="Map">
+		SELECT * FROM DMT_PEN_STD WHERE PEN_CD = #{CD}
+	</select>
+	<!-- 벌점내역 조회하기 -->
+	<select id="selectPenList" resultType="com.ca.dormitory.vo.PenDtlVo">
+		SELECT dpd.* FROM DMT_PEN_DTL dpd, DMT_ENT_STUD des , DMT_APPL da , CBH_STUD cs ,
+		DMT_ENT_INFO dei , DMT_ROOM dr ,DMT_FLOOR df ,DMT_BLDG db 
+		WHERE db.BLDG_CODE = df.BLDG_CODE AND df.FLOOR_CODE = dr.FLOOR_CODE AND dr.ROOM_CODE = des.ROOM_CODE 
+		AND dei.ENT_NO =des.ENT_NO AND des.APPL_NO = da.APPL_NO AND da.STUD_ID = cs.STUD_ID 
+		AND des.ENT_STUD_NO  = dpd.ENT_STUD_NO 
+		AND des.ENT_NO = #{ent_no}
+		AND db.BLDG_CODE = #{bldg_code}
+		<if test='penDate != null'>
+			AND TO_CHAR(dpd.PEN_DT ,'YYYY-MM-DD') = #{penDate}
+		</if>
+		<if test='stud_id != null'>
+			AND cs.STUD_ID = #{stud_id}
+		</if>
+		<if test='stud_name != null'>
+			AND cs.STUD_NAME =#{stud_name}
+		</if>
+		<if test='pen_conf_yn != null'>
+			AND dpd.PEN_CONF_YN =#{pen_conf_yn}
+		</if>
+		ORDER BY dpd.PEN_NO DESC
+	</select>
+	
+	<!-- 벌점내역 count -->
+	<select id="countSelectedPenList" resultType="int">
+		SELECT count(*) FROM DMT_PEN_DTL dpd, DMT_ENT_STUD des , DMT_APPL da , CBH_STUD cs ,
+		DMT_ENT_INFO dei , DMT_ROOM dr ,DMT_FLOOR df ,DMT_BLDG db 
+		WHERE db.BLDG_CODE = df.BLDG_CODE AND df.FLOOR_CODE = dr.FLOOR_CODE AND dr.ROOM_CODE = des.ROOM_CODE 
+		AND dei.ENT_NO =des.ENT_NO AND des.APPL_NO = da.APPL_NO AND da.STUD_ID = cs.STUD_ID 
+		AND des.ENT_STUD_NO  = dpd.ENT_STUD_NO 
+		AND des.ENT_NO = #{ent_no}
+		AND db.BLDG_CODE = #{bldg_code}
+		<if test='penDate != null'>
+			AND TO_CHAR(dpd.PEN_DT ,'YYYY-MM-DD') = #{penDate}
+		</if>
+		<if test='stud_id != null'>
+			AND cs.STUD_ID = #{stud_id}
+		</if>
+		<if test='stud_name != null'>
+			AND cs.STUD_NAME =#{stud_name}
+		</if>
+		<if test='pen_conf_yn != null'>
+			AND dpd.PEN_CONF_YN =#{pen_conf_yn}
+		</if>
+		ORDER BY dpd.PEN_NO DESC
+	</select>
+	<!-- 벌점내역상세 -->
+	<select id="selectPenDtlByNo" resultType="com.ca.dormitory.vo.PenDtlVo">
+		SELECT * FROM DMT_PEN_DTL WHERE PEN_NO = #{no}
+	</select>
+	
+	<!-- 학생검색창 -->
+	<select id="searchStudInfo" resultType="Map">
+	SELECT * FROM DMT_ENT_STUD des, DMT_APPL da , CBH_STUD cs ,DMT_ENT_INFO dei ,DMT_ROOM dr 
+	WHERE dr.ROOM_CODE = des.ROOM_CODE AND dei.ENT_NO = des.ENT_NO AND des.APPL_NO = da.APPL_NO 
+	AND da.STUD_ID = cs.STUD_ID 
+	AND dei.ENT_NO = #{ent_no}
+	<if test='room_code != null'>
+		AND dr.ROOM_CODE = #{room_code}
+	</if>
+	<if test='stud_id != null'>
+		AND cs.STUD_ID= #{stud_id}
+	</if>
+	<if test='stud_name != null'>
+		AND cs.STUD_NAME = #{stud_name}
+	</if>
+	</select>
+	<!-- 벌점 PK NO -->
+	<select id="createPenPK" resultType="int">
+		SELECT DMT_PEN_DTL_seq.nextval from Dual
+	</select>
+	<!-- 벌점부여 -->
+	<insert id="insertPenalty">
+		INSERT INTO DMT_PEN_DTL values(
+			#{pen_no},
+			#{pen_cd},
+			#{ent_stud_no},
+			#{admin_no},
+		 	SYSDATE,
+		 	#{pen_rsm},
+		 	'Y'
+		)	
+	</insert>
+	
+</mapper>

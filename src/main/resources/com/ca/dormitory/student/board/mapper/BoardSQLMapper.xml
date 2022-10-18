@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ca.dormitory.student.board.mapper.BoardSQLMapper">
+
+
+<!-- 학생 게시판 -->
+<insert id="insertBoard">
+	INSERT INTO dmt_board VALUES(
+	dmt_board_seq.nextval,
+	#{ent_stud_no},
+	#{room_code},
+	#{board_title},
+	#{board_content},
+	SYSDATE
+)
+</insert>
+
+
+<select id="selectEntStudByApplNo" resultType="com.ca.dormitory.vo.EntStudVo">
+	SELECT * FROM DMT_ENT_STUD WHERE APPL_NO = #{appl_no}
+</select>
+
+
+<select id="selectStudentInfoByID" resultType="com.ca.dormitory.vo.EntStudVo">
+      SELECT des.* FROM dmt_appl da, DMT_ENT_STUD des, CBH_STUD cs WHERE cs.stud_id = da.stud_id 
+      AND des.appl_no = da.appl_no 
+      AND cs.stud_id = #{studID} AND ROWNUM=1
+</select>
+   
+ <select id="selectBoardByBoardAll" resultType="com.ca.dormitory.vo.BoardVo">
+ 	SELECT * FROM dmt_board ORDER BY board_no DESC	
+ </select>  
+ 
+ <select id="selectBoardByBoardNo" resultType="com.ca.dormitory.vo.BoardVo">
+ 	SELECT * FROM dmt_board WHERE BOARD_NO = #{boardNo}
+ </select>
+ 
+ 
+ <insert id="insertComment">
+	INSERT INTO dmt_comment VALUES(
+	dmt_comment_seq.nextval,
+	#{board_no},
+	#{ent_stud_no},
+	#{cmmt_content},
+	SYSDATE
+	)
+ </insert>
+ 
+ <select id="selectCommentList" resultType="com.ca.dormitory.vo.CommentVo">
+ 	SELECT * FROM dmt_comment
+ 	WHERE board_no = #{boardNo}
+ 	ORDER BY cmmt_no ASC
+ </select>
+ 
+ <!-- 학생NO로 정보 가져오기 -->
+ <select id="selectEntStudByNo" resultType="com.ca.dormitory.vo.EntStudVo">
+ 	SELECT * FROM (
+    SELECT t1.*, ROWNUM AS rnum FROM (
+      SELECT des.room_code, des.ent_no, des.appl_no, des.ent_stud_no, cs.STUD_ID ,cs.STUD_NAME ,cs.STUD_GRADE ,cs.STUD_DEPT 
+      FROM DMT_APPL da, DMT_ENT_STUD des , CBH_STUD cs 
+      WHERE da.APPL_NO =des.APPL_NO AND cs.STUD_ID =da.STUD_ID 
+      AND da.STUD_ID = #{stud_id} ORDER BY da.APPL_NO DESC
+   )t1 
+)t2 WHERE rnum='1'
+ </select>
+ 
+ <!-- 관생NO로 정보 가져오기 -->
+ <select id="selectEntStudByStudNo" resultType="Map">
+ 	SELECT * FROM (
+    SELECT t1.*, ROWNUM AS rnum FROM (
+      SELECT des.room_code, des.ent_no, des.appl_no, des.ent_stud_no, cs.STUD_ID ,cs.STUD_NAME ,cs.STUD_GRADE ,cs.STUD_DEPT 
+      FROM DMT_APPL da, DMT_ENT_STUD des , CBH_STUD cs 
+      WHERE da.APPL_NO =des.APPL_NO AND cs.STUD_ID =da.STUD_ID 
+      AND des.ent_stud_no = #{ent_stud_no} ORDER BY da.APPL_NO DESC
+   )t1 
+)t2 WHERE rnum='1'
+ </select>
+ 	
+ 
+  <delete id="deleteByBoardNo">
+ 	DELETE FROM DMT_BOARD WHERE BOARD_NO = #{board_no}
+ </delete>
+ 
+ <update id="updateBoard">
+ 	UPDATE DMT_BOARD 
+	SET BOARD_TITLE = #{board_title}, BOARD_CONTENT = #{board_content}
+	WHERE BOARD_NO = #{board_no}
+ </update>
+ 
+ <!-- 댓글 삭제 -->
+
+
+<delete id="deleteComment">DELETE FROM DMT_COMMENT WHERE CMMT_NO = #{cmmt_no} </delete>
+ 
+</mapper>

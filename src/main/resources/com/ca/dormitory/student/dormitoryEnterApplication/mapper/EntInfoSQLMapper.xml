@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ca.dormitory.student.dormitoryEnterApplication.mapper.EntInfoSQLMapper">
+
+
+   <select id="selectAllEntINfo" resultType="com.ca.dormitory.vo.EntInfoVo">
+      select * from DMT_ENT_INFO 
+   </select>
+   
+   <select id="selectEntInfo" resultType="com.ca.dormitory.vo.EntInfoVo">
+      select * from DMT_ENT_INFO where ent_no = #{ent_no}
+   </select>
+
+   <insert id="insertAppl">
+      INSERT INTO DMT_APPL values(
+      DMT_APPL_seq.nextval,
+      #{recr_no},
+      #{stud_id},
+      null,
+      <if test='appl_choice =="Nselect"'>
+      null,
+      </if>
+      <if test='appl_choice !="Nselect"'>
+      #{appl_choice},
+      </if>
+      SYSDATE,
+      'W',
+      'N',
+      #{stud_zipcode},
+      #{stud_addr1},
+      #{stud_addr2},
+      #{grdn_name},
+      #{grdn_phone},
+      #{grdn_relation},
+      #{grdn_zipcode},
+      #{grdn_addr1},
+      #{grdn_addr2}
+      )
+   </insert>
+   <select id="CherkApplInfo" resultType="com.ca.dormitory.vo.ApplVo">
+      SELECT * FROM DMT_APPL 
+      WHERE RECR_NO = #{recrNo} 
+      AND STUD_ID = #{studId} 
+   </select>
+   
+   <select id="CheckRecrInfo" resultType="com.ca.dormitory.vo.RecrInfoVo">
+   <![CDATA[
+   SELECT * FROM DMT_RECR_INFO 
+   where RECR_START_DATE < SYSDATE AND RECR_END_DATE > SYSDATE
+   and recr_div = #{stud_grade} 
+   ]]>
+   </select>
+   
+</mapper>

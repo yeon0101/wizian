@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ca.dormitory.staff.notice.mapper.NoticeSQLMapper">
+
+<insert id="insertNotice">
+	INSERT INTO DMT_NOTICE VALUES(
+	DMT_NOTICE_seq.nextval,
+	#{admin_no},
+	#{notice_title},
+	#{notice_content},
+	0,
+	SYSDATE,
+	#{notice_pin}
+	)
+</insert>
+
+<select id="selectNoticeByNoticeAll" resultType="com.ca.dormitory.vo.NoticeVo">
+	SELECT dn.* FROM DMT_NOTICE dn , DMT_ADMIN da , CBH_STAFF cs  
+	WHERE dn.ADMIN_NO = da.ADMIN_NO
+	AND da.STAFF_ID = cs.STAFF_ID
+	<if test="searchType != null  and searchWord != null">
+		<choose>
+			<when test="searchType == 'title'">
+				AND dn.NOTICE_TITLE LIKE '%'|| #{searchWord} ||'%'
+			</when>
+			<when test="searchType == 'content'">
+				AND dn.NOTICE_CONTENT LIKE '%'|| #{searchWord} ||'%'
+			</when>
+			<when test="searchType == 'staffname'">
+				AND cs.STAFF_NAME LIKE '%'|| #{searchWord} ||'%'
+			</when>
+		</choose>
+	</if>
+	ORDER BY notice_pin DESC ,NOTICE_REG_DT DESC 
+</select>
+
+<select id="selectNoticeByNoticeNo" resultType="com.ca.dormitory.vo.NoticeVo">
+	SELECT * FROM DMT_NOTICE WHERE notice_no = #{noticeNo}
+</select>
+
+<!-- staff 이름 가져오기 위해 -->
+<select id="selectNoticeByAdminNo" resultType="com.ca.dormitory.vo.StaffVo">
+	SELECT cs.* FROM CBH_STAFF cs, DMT_ADMIN da 
+	WHERE cs.STAFF_ID = da.STAFF_ID 
+	AND da.ADMIN_NO = #{admin_no}
+</select> 
+
+<select id="selectAdminByAdminNo" resultType="com.ca.dormitory.vo.AdminVo"> 
+	SELECT * FROM DMT_ADMIN WHERE ADMIN_NO = #{admin_no}
+</select>
+
+<update id="updateByreadCount">
+	UPDATE DMT_NOTICE
+	SET notice_readcount = notice_readcount + 1
+	WHERE notice_no = #{noticeNo}
+</update>
+
+<select id="selectAdminByStaffId" resultType="com.ca.dormitory.vo.AdminVo">
+	SELECT* FROM DMT_ADMIN
+	WHERE STAFF_ID = #{staff_id}
+</select>
+
+<delete id="deleteByNoticeNo">
+	DELETE FROM dmt_notice WHERE notice_no = #{notice_no}
+</delete>
+
+
+
+</mapper>
